@@ -4,7 +4,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.practicum.imdb_api.domain.models.Movie
 
-class MovieAdapter (val clickListener: OnMovieClickListener) : RecyclerView.Adapter<MovieViewHolder> () {
+class MoviesAdapter (val clickListener: OnMovieClickListener) : RecyclerView.Adapter<MovieViewHolder> () {
 
     var movies = ArrayList<Movie>()
 
