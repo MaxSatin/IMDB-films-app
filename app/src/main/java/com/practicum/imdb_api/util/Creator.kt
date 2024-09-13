@@ -1,6 +1,6 @@
-package com.practicum.imdb_api
+package com.practicum.imdb_api.util
 
-import android.app.Activity
+import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import com.practicum.imdb_api.data.MoviesRepositoryImpl
 import com.practicum.imdb_api.data.network.RetrofitNetworkClient
@@ -12,12 +12,12 @@ import com.practicum.imdb_api.presentation.PosterController
 import com.practicum.imdb_api.ui.movies.MoviesAdapter
 
 object Creator {
-    private fun getMoviesRepository(): MoviesRepository {
-        return MoviesRepositoryImpl(RetrofitNetworkClient())
+    private fun getMoviesRepository(context: Context): MoviesRepository {
+        return MoviesRepositoryImpl(RetrofitNetworkClient(context))
     }
 
-    fun provideMoviesInteractor(): MoviesInteractor {
-        return MoviesInteractorImpl(getMoviesRepository())
+    fun provideMoviesInteractor(context: Context): MoviesInteractor {
+        return MoviesInteractorImpl(getMoviesRepository(context))
     }
 
     fun provideMoviesSearchController(

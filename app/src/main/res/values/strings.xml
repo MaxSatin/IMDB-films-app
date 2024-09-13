@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">IMDb_API</string>
     <string name="nothing_found">Ничего не нашлось</string>
+    <string name="something_went_wrong">Что-то пошло не так</string>
 </resources>

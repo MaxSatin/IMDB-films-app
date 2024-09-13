@@ -4,29 +4,16 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.text.Editable
-import android.text.TextWatcher
-import android.view.LayoutInflater
-import android.view.View
-import android.widget.Button
-import android.widget.EditText
-import android.widget.TextView
-import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.practicum.imdb_api.Creator
+import com.practicum.imdb_api.util.Creator
 import com.practicum.imdb_api.R
-import com.practicum.imdb_api.databinding.ActivityMainBinding
-import com.practicum.imdb_api.domain.api.MoviesInteractor
-import com.practicum.imdb_api.domain.models.Movie
 import com.practicum.imdb_api.ui.poster.PosterActivity
 
 class MovieActivity : AppCompatActivity() {
-    private val moviesInteractor = Creator.provideMoviesInteractor()
+    private val moviesInteractor = Creator.provideMoviesInteractor(this)
 
 
     companion object {
