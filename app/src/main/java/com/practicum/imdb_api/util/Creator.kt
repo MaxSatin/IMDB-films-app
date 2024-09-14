@@ -7,9 +7,10 @@ import com.practicum.imdb_api.data.network.RetrofitNetworkClient
 import com.practicum.imdb_api.domain.api.MoviesInteractor
 import com.practicum.imdb_api.domain.api.MoviesRepository
 import com.practicum.imdb_api.domain.impl.MoviesInteractorImpl
-import com.practicum.imdb_api.presentation.MoviesSearchController
-import com.practicum.imdb_api.presentation.PosterController
-import com.practicum.imdb_api.ui.movies.MoviesAdapter
+import com.practicum.imdb_api.presentation.movies.MoviesSearchPresenter
+import com.practicum.imdb_api.presentation.PosterPresenter
+import com.practicum.imdb_api.presentation.movies.MoviesView
+import com.practicum.imdb_api.presentation.poster.PosterView
 
 object Creator {
     private fun getMoviesRepository(context: Context): MoviesRepository {
@@ -20,14 +21,14 @@ object Creator {
         return MoviesInteractorImpl(getMoviesRepository(context))
     }
 
-    fun provideMoviesSearchController(
-        activity: AppCompatActivity,
-        adapter: MoviesAdapter
-    ): MoviesSearchController {
-        return MoviesSearchController(activity, adapter)
+    fun provideMoviesSearchPresenter(
+        activity: MoviesView,
+        context: Context,
+    ): MoviesSearchPresenter {
+        return MoviesSearchPresenter(activity, context)
     }
 
-    fun providePosterController(activity: AppCompatActivity): PosterController {
-        return PosterController(activity)
+    fun providePosterPresenter(activity: PosterView, url: String): PosterPresenter {
+        return PosterPresenter(activity, url)
     }
 }
