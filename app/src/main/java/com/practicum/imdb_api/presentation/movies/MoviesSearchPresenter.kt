@@ -11,13 +11,12 @@ import com.practicum.imdb_api.R
 import com.practicum.imdb_api.domain.api.MoviesInteractor
 import com.practicum.imdb_api.domain.models.Movie
 import com.practicum.imdb_api.ui.movies.MoviesAdapter
+import moxy.MvpPresenter
 
 class MoviesSearchPresenter(
     private val context: Context,
-) {
+): MvpPresenter<MoviesView>() {
 
-    private var view: MoviesView? = null
-    private var state: MoviesState? = null
     private var latestSearchText: String? = null
     private val moviesInteractor = Creator.provideMoviesInteractor(context)
 
@@ -31,14 +30,6 @@ class MoviesSearchPresenter(
 
     private val handler = Handler(Looper.getMainLooper())
 
-    fun attachView(view: MoviesView){
-        this.view = view
-        state?.let { view.render(it) }
-    }
-
-    fun detachView(){
-        this.view = null
-    }
 
     fun searchDebounce(changedText: String) {
 
@@ -58,7 +49,7 @@ class MoviesSearchPresenter(
         )
     }
 
-    fun onDestroy() {
+    override fun onDestroy() {
         handler.removeCallbacksAndMessages(SEARCH_REQUEST_TOKEN)
     }
 
@@ -84,7 +75,7 @@ class MoviesSearchPresenter(
                                             context.getString(R.string.something_went_wrong)
                                         )
                                     )
-                                    view?.showToast(errorMessage)
+                                    viewState?.showToast(errorMessage)
                                 }
 
                                 movies.isEmpty() -> {
@@ -107,8 +98,7 @@ class MoviesSearchPresenter(
     }
 
     private fun renderState(state: MoviesState) {
-        this.state = state
-        this.view?.render(state)
+        this.viewState?.render(state)
     }
 
 }

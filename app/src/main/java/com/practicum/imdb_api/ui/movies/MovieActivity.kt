@@ -25,8 +25,11 @@ import com.practicum.imdb_api.presentation.movies.MoviesView
 import com.practicum.imdb_api.ui.poster.PosterActivity
 import com.practicum.imdb_api.MoviesApplication
 import com.practicum.imdb_api.util.Creator
+import moxy.MvpActivity
+import moxy.presenter.InjectPresenter
+import moxy.presenter.ProvidePresenter
 
-class MovieActivity : AppCompatActivity(), MoviesView {
+class MovieActivity : MvpActivity(), MoviesView {
 
     companion object {
         private const val CLICK_DEBOUNE_DELAY = 1_000L
@@ -40,7 +43,16 @@ class MovieActivity : AppCompatActivity(), MoviesView {
             startActivity(intent)
         }
     }
-    private var moviesSearchPresenter: MoviesSearchPresenter? = null
+
+    @InjectPresenter
+    lateinit var moviesSearchPresenter: MoviesSearchPresenter
+
+    @ProvidePresenter
+    fun provideMoviesSearchPresenter(): MoviesSearchPresenter {
+       return Creator.provideMoviesSearchPresenter(
+            this.applicationContext
+        )
+    }
 
     private val handler = Handler(Looper.getMainLooper())
     private var isClickAllowed = true
@@ -58,9 +70,6 @@ class MovieActivity : AppCompatActivity(), MoviesView {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        enableEdgeToEdge()
-//        binding = ActivityMainBinding.inflate(LayoutInflater.from(this))
-
         placeholderMessage = findViewById(R.id.placeholderMessage)
         queryInput = findViewById(R.id.textSearch)
         moviesList = findViewById(R.id.recyclerMovie)
@@ -71,18 +80,6 @@ class MovieActivity : AppCompatActivity(), MoviesView {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-
-        moviesSearchPresenter = (this.application as? MoviesApplication)?.moviesSearchPresenter
-
-        if (moviesSearchPresenter == null) {
-            moviesSearchPresenter = Creator.provideMoviesSearchPresenter(
-                this.applicationContext
-            )
-            (this.application as? MoviesApplication)?.moviesSearchPresenter = moviesSearchPresenter
-        }
-
-
-
 
         moviesList.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         moviesList.adapter = adapter
@@ -103,43 +100,6 @@ class MovieActivity : AppCompatActivity(), MoviesView {
         }
 
     }
-
-    override fun onStart() {
-        super.onStart()
-        moviesSearchPresenter?.attachView(this)
-    }
-
-    override fun onResume() {
-        super.onResume()
-        moviesSearchPresenter?.attachView(this)
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        textWatcher?.let { queryInput.removeTextChangedListener(it) }
-        moviesSearchPresenter?.onDestroy()
-        moviesSearchPresenter?.detachView()
-
-        if (isFinishing){
-            (this.application as? MoviesApplication)?.moviesSearchPresenter = null
-        }
-    }
-
-    override fun onPause() {
-        super.onPause()
-        moviesSearchPresenter?.detachView()
-    }
-
-    override fun onStop() {
-        super.onStop()
-        moviesSearchPresenter?.detachView()
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        moviesSearchPresenter?.detachView()
-    }
-
 
     private fun clickDebounce(): Boolean {
         val current = isClickAllowed
