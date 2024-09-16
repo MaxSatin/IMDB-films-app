@@ -17,16 +17,16 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.practicum.imdb_api.util.Creator
 import com.practicum.imdb_api.R
 import com.practicum.imdb_api.domain.models.Movie
+import com.practicum.imdb_api.presentation.movies.MoviesSearchPresenter
 import com.practicum.imdb_api.presentation.movies.MoviesState
 import com.practicum.imdb_api.presentation.movies.MoviesView
 import com.practicum.imdb_api.ui.poster.PosterActivity
+import com.practicum.imdb_api.MoviesApplication
+import com.practicum.imdb_api.util.Creator
 
 class MovieActivity : AppCompatActivity(), MoviesView {
-    private val moviesInteractor = Creator.provideMoviesInteractor(this)
-
 
     companion object {
         private const val CLICK_DEBOUNE_DELAY = 1_000L
@@ -40,7 +40,7 @@ class MovieActivity : AppCompatActivity(), MoviesView {
             startActivity(intent)
         }
     }
-    private val moviesSearchPresenter = Creator.provideMoviesSearchPresenter(this, this)
+    private var moviesSearchPresenter: MoviesSearchPresenter? = null
 
     private val handler = Handler(Looper.getMainLooper())
     private var isClickAllowed = true
@@ -72,6 +72,18 @@ class MovieActivity : AppCompatActivity(), MoviesView {
             insets
         }
 
+        moviesSearchPresenter = (this.application as? MoviesApplication)?.moviesSearchPresenter
+
+        if (moviesSearchPresenter == null) {
+            moviesSearchPresenter = Creator.provideMoviesSearchPresenter(
+                this.applicationContext
+            )
+            (this.application as? MoviesApplication)?.moviesSearchPresenter = moviesSearchPresenter
+        }
+
+
+
+
         moviesList.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         moviesList.adapter = adapter
 
@@ -80,7 +92,7 @@ class MovieActivity : AppCompatActivity(), MoviesView {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                moviesSearchPresenter.searchDebounce(s?.toString() ?: "")
+                moviesSearchPresenter?.searchDebounce(s?.toString() ?: "")
             }
 
             override fun afterTextChanged(s: Editable?) {
@@ -92,11 +104,42 @@ class MovieActivity : AppCompatActivity(), MoviesView {
 
     }
 
+    override fun onStart() {
+        super.onStart()
+        moviesSearchPresenter?.attachView(this)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        moviesSearchPresenter?.attachView(this)
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         textWatcher?.let { queryInput.removeTextChangedListener(it) }
-        moviesSearchPresenter.onDestroy()
+        moviesSearchPresenter?.onDestroy()
+        moviesSearchPresenter?.detachView()
+
+        if (isFinishing){
+            (this.application as? MoviesApplication)?.moviesSearchPresenter = null
+        }
     }
+
+    override fun onPause() {
+        super.onPause()
+        moviesSearchPresenter?.detachView()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        moviesSearchPresenter?.detachView()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        moviesSearchPresenter?.detachView()
+    }
+
 
     private fun clickDebounce(): Boolean {
         val current = isClickAllowed

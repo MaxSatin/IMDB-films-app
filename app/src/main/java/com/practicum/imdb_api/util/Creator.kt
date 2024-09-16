@@ -22,10 +22,9 @@ object Creator {
     }
 
     fun provideMoviesSearchPresenter(
-        activity: MoviesView,
         context: Context,
     ): MoviesSearchPresenter {
-        return MoviesSearchPresenter(activity, context)
+        return MoviesSearchPresenter(context)
     }
 
     fun providePosterPresenter(activity: PosterView, url: String): PosterPresenter {
