@@ -1,32 +1,48 @@
 package com.practicum.imdb_api.presentation.movies
 
-import android.content.Context
+import android.app.Application
 import android.os.Handler
 import android.os.Looper
 import android.os.SystemClock
-import android.view.View
-import android.widget.Toast
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
 import com.practicum.imdb_api.util.Creator
 import com.practicum.imdb_api.R
 import com.practicum.imdb_api.domain.api.MoviesInteractor
 import com.practicum.imdb_api.domain.models.Movie
-import com.practicum.imdb_api.ui.movies.MoviesAdapter
-import moxy.MvpPresenter
 
-class MoviesSearchPresenter(
-    private val context: Context,
-): MvpPresenter<MoviesView>() {
+class MoviesSearchViewModel(
+    application: Application,
+): AndroidViewModel(application) {
 
     private var latestSearchText: String? = null
-    private val moviesInteractor = Creator.provideMoviesInteractor(context)
+    private val moviesInteractor = Creator.provideMoviesInteractor(getApplication<Application>())
 
     companion object {
         private const val SEARCH_DEBOUNCE_DELAY = 2000L
         private val SEARCH_REQUEST_TOKEN = Any()
+        fun getViewModelFactory(): ViewModelProvider.Factory = viewModelFactory {
+            initializer {
+                MoviesSearchViewModel(this[APPLICATION_KEY] as Application)
+            }
+        }
     }
 
 
+
+
     private val movies = ArrayList<Movie>()
+
+    private val stateLiveData = MutableLiveData<MoviesState>()
+    fun observeState(): LiveData<MoviesState> = stateLiveData
+
+    private val showToast = SingleLineEvent<String>()
+    fun observeToastState(): LiveData<String> = showToast
 
     private val handler = Handler(Looper.getMainLooper())
 
@@ -49,7 +65,7 @@ class MoviesSearchPresenter(
         )
     }
 
-    override fun onDestroy() {
+    override fun onCleared() {
         handler.removeCallbacksAndMessages(SEARCH_REQUEST_TOKEN)
     }
 
@@ -63,7 +79,6 @@ class MoviesSearchPresenter(
                 newSearchText,
                 object : MoviesInteractor.MoviesConsumer {
                     override fun consume(foundMovies: List<Movie>?, errorMessage: String?) {
-                        handler.post {
                             if (foundMovies != null) {
                                 movies.clear()
                                 movies.addAll(foundMovies)
@@ -72,15 +87,15 @@ class MoviesSearchPresenter(
                                 errorMessage != null -> {
                                     renderState(
                                         MoviesState.Error(
-                                            context.getString(R.string.something_went_wrong)
+                                            getApplication<Application>().getString(R.string.something_went_wrong)
                                         )
                                     )
-                                    viewState?.showToast(errorMessage)
+                                    showToast.postValue(errorMessage)
                                 }
 
                                 movies.isEmpty() -> {
                                     renderState(
-                                        MoviesState.Empty(context.getString(R.string.nothing_found))
+                                        MoviesState.Empty(getApplication<Application>().getString(R.string.nothing_found))
                                     )
                                 }
 
@@ -91,14 +106,15 @@ class MoviesSearchPresenter(
 
                                 }
                             }
-                        }
                     }
                 })
         }
     }
 
     private fun renderState(state: MoviesState) {
-        this.viewState?.render(state)
+        stateLiveData.postValue(state)
     }
+
+
 
 }
