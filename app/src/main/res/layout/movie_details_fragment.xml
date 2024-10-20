@@ -1,22 +1,234 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <com.google.android.material.tabs.TabLayout
-        android:id="@+id/tabLayout"
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/filmTitle"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@android:color/holo_blue_light"
-        app:tabTextColor="@color/black"
-        app:tabMode="fixed"
-        app:tabIndicator="@color/black"
-        app:tabRippleColor="@color/white"/>
+        android:textSize="40sp"
+        android:textStyle="italic"
+        android:textColor="@color/black"
+        tools:text = "Lord of the Rings. The Fellowship of the Ring"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="parent"/>
 
-    <androidx.viewpager2.widget.ViewPager2
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+    <TextView
+        android:id="@+id/rating"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        android:text="Рейтинг IMDB:"
+        app:layout_constraintTop_toBottomOf="@id/filmTitle"
+        app:layout_constraintStart_toStartOf="@id/filmTitle"/>
 
-</LinearLayout>
+    <TextView
+        android:id="@+id/actualRating"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="50dp"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        tools:text = "8.8"
+        app:layout_constraintStart_toEndOf="@id/rating"
+        app:layout_constraintBottom_toBottomOf="@id/rating"/>
+
+    <TextView
+        android:id="@+id/year"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        android:text="Год:"
+        app:layout_constraintTop_toBottomOf="@id/rating"
+        app:layout_constraintStart_toStartOf="@id/rating"/>
+
+    <TextView
+        android:id="@+id/actualYear"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="50dp"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        tools:text = "2001"
+        app:layout_constraintStart_toEndOf="@id/rating"
+        app:layout_constraintBottom_toBottomOf="@id/year"/>
+
+    <TextView
+        android:id="@+id/country"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        android:text="Страна:"
+        app:layout_constraintTop_toBottomOf="@id/year"
+        app:layout_constraintStart_toStartOf="@id/rating"/>
+
+    <TextView
+        android:id="@+id/actualCountry"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="50dp"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        android:maxEms="30"
+        android:singleLine="false"
+        tools:text = "New Zeland, USA"
+        app:layout_constraintStart_toEndOf="@id/rating"
+        app:layout_constraintBottom_toBottomOf="@id/country"/>
+
+    <TextView
+        android:id="@+id/genre"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        android:maxEms="30"
+        android:singleLine="false"
+        android:text="Жанр:"
+        app:layout_constraintTop_toBottomOf="@id/country"
+        app:layout_constraintStart_toStartOf="@id/rating"/>
+
+    <TextView
+        android:id="@+id/actualGenre"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="50dp"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        android:maxEms="30"
+        android:singleLine="false"
+        tools:text = "Action, Adventure, Drama"
+        app:layout_constraintStart_toEndOf="@id/rating"
+        app:layout_constraintBottom_toBottomOf="@id/genre"/>
+
+    <TextView
+        android:id="@+id/director"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        android:maxEms="30"
+        android:singleLine="false"
+        android:text="Режиссер:"
+        app:layout_constraintTop_toBottomOf="@id/genre"
+        app:layout_constraintStart_toStartOf="@id/rating"/>
+
+    <TextView
+        android:id="@+id/actualDirector"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="50dp"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        android:maxEms="30"
+        android:singleLine="false"
+        tools:text = "Peter Jackson"
+        app:layout_constraintStart_toEndOf="@id/rating"
+        app:layout_constraintBottom_toBottomOf="@id/director"/>
+
+
+    <TextView
+        android:id="@+id/screenwriter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        android:maxEms="30"
+        android:singleLine="false"
+        android:text="Сценарист:"
+        app:layout_constraintTop_toTopOf="@id/actualScreenWriter"
+        app:layout_constraintStart_toStartOf="@id/rating"/>
+
+    <TextView
+        android:id="@+id/actualScreenWriter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="50dp"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        android:maxEms="30"
+        android:singleLine="false"
+        tools:text = "J.R.R. Tolkien, Fran Walsh,\n Philippa Boyens"
+        app:layout_constraintStart_toEndOf="@id/rating"
+        app:layout_constraintTop_toBottomOf="@id/actualDirector" />
+
+    <TextView
+        android:id="@+id/actors"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        android:maxEms="30"
+        android:singleLine="false"
+        android:text="В ролях:"
+        app:layout_constraintTop_toTopOf="@id/actualActors"
+        app:layout_constraintStart_toStartOf="@id/rating"/>
+
+    <TextView
+        android:id="@+id/actualActors"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="50dp"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        android:maxEms="30"
+        android:singleLine="false"
+        tools:text = "Elijah Wood, Ian McKellen"
+        app:layout_constraintStart_toEndOf="@id/rating"
+        app:layout_constraintTop_toBottomOf="@id/actualScreenWriter" />
+
+    <TextView
+        android:id="@+id/story"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        android:maxEms="30"
+        android:singleLine="false"
+        android:text="Сюжет:"
+        app:layout_constraintTop_toBottomOf="@id/actualActors"
+        app:layout_constraintStart_toStartOf="@id/rating"/>
+
+    <TextView
+        android:id="@+id/actualStory"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        android:maxEms="30"
+        android:singleLine="false"
+        tools:text = "Пример сюжета"
+        app:layout_constraintTop_toBottomOf="@id/story"
+        app:layout_constraintStart_toStartOf="@id/rating"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -20,19 +20,20 @@ import com.practicum.imdb_api.domain.models.MovieDetails
 
 class MoviesSearchViewModel(
     application: Application,
+    private val moviesInteractor: MoviesInteractor
 ): AndroidViewModel(application) {
 
     private var latestSearchText: String? = null
-    private val moviesInteractor = Creator.provideMoviesInteractor(getApplication<Application>())
+//    private val moviesInteractor = Creator.provideMoviesInteractor(getApplication<Application>())
 
     companion object {
         private const val SEARCH_DEBOUNCE_DELAY = 2000L
         private val SEARCH_REQUEST_TOKEN = Any()
-        fun getViewModelFactory(): ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                MoviesSearchViewModel(this[APPLICATION_KEY] as Application)
-            }
-        }
+//        fun getViewModelFactory(): ViewModelProvider.Factory = viewModelFactory {
+//            initializer {
+//                MoviesSearchViewModel(this[APPLICATION_KEY] as Application)
+//            }
+//        }
     }
 
     private val movies = ArrayList<Movie>()
@@ -125,7 +126,7 @@ class MoviesSearchViewModel(
                                             getApplication<Application>().getString(R.string.something_went_wrong)
                                         )
                                     )
-                                    showToast.postValue(errorMessage)
+                                    showToast.postValue(errorMessage!!)
                                 }
 
                                 movies.isEmpty() -> {

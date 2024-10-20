@@ -11,15 +11,15 @@ import com.practicum.imdb_api.presentation.PosterPresenter
 import com.practicum.imdb_api.presentation.movie_details.PosterView
 
 object Creator {
-    private fun getMoviesRepository(context: Context): MoviesRepository {
-        return MoviesRepositoryImpl(RetrofitNetworkClient(context),
-            LocalStorage(context.getSharedPreferences("local_storage", Context.MODE_PRIVATE))
-        )
-    }
-
-    fun provideMoviesInteractor(context: Context): MoviesInteractor {
-        return MoviesInteractorImpl(getMoviesRepository(context))
-    }
+//    private fun getMoviesRepository(context: Context): MoviesRepository {
+//        return MoviesRepositoryImpl(RetrofitNetworkClient(context),
+//            LocalStorage(context.getSharedPreferences("local_storage", Context.MODE_PRIVATE))
+//        )
+//    }
+//
+//    fun provideMoviesInteractor(context: Context): MoviesInteractor {
+//        return MoviesInteractorImpl(getMoviesRepository(context))
+//    }
 
 //    fun provideMoviesSearchPresenter(
 //        context: Context,

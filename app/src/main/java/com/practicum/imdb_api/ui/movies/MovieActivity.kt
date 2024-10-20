@@ -12,18 +12,21 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.ComponentActivity
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.practicum.imdb_api.R
+import com.practicum.imdb_api.databinding.ActivityMainBinding
 import com.practicum.imdb_api.domain.models.Movie
 import com.practicum.imdb_api.presentation.movies.MoviesSearchViewModel
 import com.practicum.imdb_api.presentation.movies.MoviesState
 import com.practicum.imdb_api.ui.poster.PosterActivity
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class MovieActivity : ComponentActivity() {
+class MovieActivity : AppCompatActivity() {
 
     companion object {
         private const val CLICK_DEBOUNE_DELAY = 1_000L
@@ -46,8 +49,6 @@ class MovieActivity : ComponentActivity() {
 )
 
 
-    private lateinit var viewModel: MoviesSearchViewModel
-
 
 //    @InjectPresenter
 //    lateinit var moviesSearchPresenter: MoviesSearchViewModel
@@ -62,7 +63,7 @@ class MovieActivity : ComponentActivity() {
     private val handler = Handler(Looper.getMainLooper())
     private var isClickAllowed = true
 
-//    lateinit var binding: ActivityMainBinding
+    lateinit var binding: ActivityMainBinding
 
     private lateinit var queryInput: EditText
     private lateinit var placeholderMessage: TextView
@@ -71,17 +72,20 @@ class MovieActivity : ComponentActivity() {
 
     private var textWatcher: TextWatcher? = null
 
+    val viewModel: MoviesSearchViewModel by viewModel()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        viewModel = ViewModelProvider(this, MoviesSearchViewModel.getViewModelFactory())[MoviesSearchViewModel::class.java]
+//        viewModel = ViewModelProvider(this, MoviesSearchViewModel.getViewModelFactory())[MoviesSearchViewModel::class.java]
         placeholderMessage = findViewById(R.id.placeholderMessage)
         queryInput = findViewById(R.id.textSearch)
         moviesList = findViewById(R.id.recyclerMovie)
         progressBar = findViewById(R.id.progressBar)
 
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
