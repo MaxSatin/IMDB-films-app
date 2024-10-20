@@ -4,12 +4,12 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.practicum.imdb_api.domain.models.Movie
 
-class MoviesAdapter (val clickListener: OnMovieClickListener) : RecyclerView.Adapter<MovieViewHolder> () {
+class MoviesAdapter (private val clickListener: OnMovieClickListener) : RecyclerView.Adapter<MovieViewHolder> () {
 
     var movies = ArrayList<Movie>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieViewHolder {
-        return MovieViewHolder(parent)
+        return MovieViewHolder(parent, clickListener)
     }
 
     override fun getItemCount(): Int {
@@ -18,10 +18,10 @@ class MoviesAdapter (val clickListener: OnMovieClickListener) : RecyclerView.Ada
 
     override fun onBindViewHolder(holder: MovieViewHolder, position: Int) {
         holder.bind(movies.get(position))
-        holder.itemView.setOnClickListener { clickListener.onMovieClick(movies.get(position))  }
     }
 
-    fun interface OnMovieClickListener {
+    interface OnMovieClickListener {
        fun onMovieClick(movie: Movie)
+       fun onFavoriteToggleClick(movie: Movie)
     }
 }

@@ -41,5 +41,13 @@
             android:textSize="18sp"
             android:textStyle="italic"/>
 
+        <ImageView
+            android:id="@+id/favorite"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:textOff=""
+            android:textOn=""/>
+
+
 </LinearLayout>
     </LinearLayout>

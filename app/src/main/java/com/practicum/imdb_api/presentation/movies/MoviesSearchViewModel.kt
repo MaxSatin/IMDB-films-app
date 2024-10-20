@@ -6,6 +6,7 @@ import android.os.Looper
 import android.os.SystemClock
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
@@ -15,6 +16,7 @@ import com.practicum.imdb_api.util.Creator
 import com.practicum.imdb_api.R
 import com.practicum.imdb_api.domain.api.MoviesInteractor
 import com.practicum.imdb_api.domain.models.Movie
+import com.practicum.imdb_api.domain.models.MovieDetails
 
 class MoviesSearchViewModel(
     application: Application,
@@ -33,19 +35,52 @@ class MoviesSearchViewModel(
         }
     }
 
-
-
-
     private val movies = ArrayList<Movie>()
 
     private val stateLiveData = MutableLiveData<MoviesState>()
-    fun observeState(): LiveData<MoviesState> = stateLiveData
+    private val mediatorStateLiveData = MediatorLiveData<MoviesState>().also { liveData ->
+        // 1
+        liveData.addSource(stateLiveData) { movieState ->
+            liveData.value = when (movieState) {
+                // 2
+                is MoviesState.Content -> MoviesState.Content(movieState.movies.sortedByDescending { it.inFavorite })
+                is MoviesState.Empty -> movieState
+                is MoviesState.Error -> movieState
+                is MoviesState.Loading -> movieState
+            }
+        }
+
+    }
+
+    fun observeState(): LiveData<MoviesState> = mediatorStateLiveData
 
     private val showToast = SingleLineEvent<String>()
     fun observeToastState(): LiveData<String> = showToast
 
     private val handler = Handler(Looper.getMainLooper())
 
+    fun toggleFavorite(movie: Movie) {
+        if (movie.inFavorite) {
+            moviesInteractor.removeMovieFromFavorites(movie)
+        } else {
+            moviesInteractor.addMovieToFavorites(movie)
+        }
+
+        updateMovieContent(movie.id, movie.copy(inFavorite = !movie.inFavorite))
+    }
+
+    private fun updateMovieContent(movieId: String, newMovie: Movie){
+        val currentState = stateLiveData.value
+
+        if (currentState is MoviesState.Content) {
+            val movieIndex = currentState.movies.indexOfFirst { it.id == movieId }
+            if (movieIndex != -1) {
+                stateLiveData.value = MoviesState.Content(
+                    currentState.movies.toMutableList().also { it[movieIndex] = newMovie }
+                )
+            }
+        }
+    }
 
     fun searchDebounce(changedText: String) {
 

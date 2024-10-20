@@ -1,6 +1,5 @@
 package com.practicum.imdb_api.ui.poster
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.widget.ImageView
@@ -12,7 +11,7 @@ import com.bumptech.glide.Glide
 import com.practicum.imdb_api.util.Creator
 import com.practicum.imdb_api.R
 import com.practicum.imdb_api.databinding.ActivityPosterBinding
-import com.practicum.imdb_api.presentation.poster.PosterView
+import com.practicum.imdb_api.presentation.movie_details.PosterView
 
 class PosterActivity : AppCompatActivity(), PosterView {
 

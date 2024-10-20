@@ -30,13 +30,20 @@ class MovieActivity : ComponentActivity() {
         private const val SEARCH_DEBOUNCE_DELAY = 2_000L
     }
 
-    private val adapter = MoviesAdapter {
-        if (clickDebounce()) {
-            val intent = Intent(this, PosterActivity::class.java)
-            intent.putExtra("poster", it.image)
-            startActivity(intent)
+    private val adapter = MoviesAdapter (
+        object : MoviesAdapter.OnMovieClickListener{
+        override fun onMovieClick(movie: Movie) {
+            if (clickDebounce()) {
+                val intent = Intent(this@MovieActivity, PosterActivity::class.java)
+                intent.putExtra("poster", movie.image)
+                startActivity(intent)
+            }
+        }
+        override fun onFavoriteToggleClick(movie: Movie){
+            viewModel.toggleFavorite(movie)
         }
     }
+)
 
 
     private lateinit var viewModel: MoviesSearchViewModel
