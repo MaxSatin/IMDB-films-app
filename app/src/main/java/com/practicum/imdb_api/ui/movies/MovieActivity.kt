@@ -39,6 +39,7 @@ class MovieActivity : AppCompatActivity() {
             if (clickDebounce()) {
                 val intent = Intent(this@MovieActivity, PosterActivity::class.java)
                 intent.putExtra("poster", movie.image)
+                intent.putExtra("movieDetails",movie.id )
                 startActivity(intent)
             }
         }

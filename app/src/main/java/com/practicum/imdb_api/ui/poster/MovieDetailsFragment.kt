@@ -6,6 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.commit
+import com.practicum.imdb_api.R
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import com.practicum.imdb_api.databinding.MovieDetailsFragmentBinding
 import com.practicum.imdb_api.domain.models.MovieDetails
@@ -45,9 +47,20 @@ class MovieDetailsFragment: Fragment() {
         viewModel.getMovieDetailsLiveData().observe(viewLifecycleOwner){ movieDetailsState ->
             if (movieDetailsState is MoviesDetailsState.Content) {
               val moviesDetails = movieDetailsState.moviesDetails
-
+                binding.filmTitle.text = moviesDetails.title
+                binding.actualYear.text = moviesDetails.year
+                binding.actualRating.text = moviesDetails.imDbRating
+                binding.actualCountry.text = moviesDetails.countries
+                binding.actualGenre.text = moviesDetails.genres
+                binding.actualDirector.text = moviesDetails.directors
+                binding.actualScreenWriter.text = moviesDetails.writers
+                binding.actualActors.text = moviesDetails.stars
+                binding.actualStory.text = moviesDetails.plot
+//            } else {
+//                activity?.supportFragmentManager.commit {
+//                    replace(R.id.)
+//                }
             }
-
 
         }
     }
