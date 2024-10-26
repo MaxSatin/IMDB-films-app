@@ -1,8 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent">
+
+        <TextView android:id="@+id/errorMessage"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_margin="40dp"
+            android:text="Что-то пошло не так"
+            android:textSize="24sp"
+            android:layout_gravity="center_horizontal"
+            android:textAlignment="center"
+            android:visibility="gone"/>
+
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:id="@+id/movieDetails_info"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <TextView
         android:id="@+id/filmTitle"
@@ -230,5 +250,20 @@
         app:layout_constraintTop_toBottomOf="@id/story"
         app:layout_constraintStart_toStartOf="@id/rating"/>
 
+    <Button
+        android:id="@+id/showCastButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginStart="10dp"
+        android:text="Show cast"
+        app:cornerRadius = "10dp"
+        app:layout_constraintStart_toStartOf="@id/movieDetails_info"
+        app:layout_constraintEnd_toEndOf="@id/movieDetails_info"
+        app:layout_constraintTop_toBottomOf="@id/actualStory">
+    </Button>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+    </FrameLayout>
+</ScrollView>

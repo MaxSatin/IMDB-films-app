@@ -8,15 +8,9 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
-import com.practicum.imdb_api.util.Creator
 import com.practicum.imdb_api.R
 import com.practicum.imdb_api.domain.api.MoviesInteractor
-import com.practicum.imdb_api.domain.models.Movie
-import com.practicum.imdb_api.domain.models.MovieDetails
+import com.practicum.imdb_api.domain.models.movie.Movie
 
 class MoviesSearchViewModel(
     application: Application,

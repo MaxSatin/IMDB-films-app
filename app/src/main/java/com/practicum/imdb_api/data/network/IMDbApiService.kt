@@ -1,5 +1,6 @@
 package com.practicum.imdb_api.data.network
 
+import com.practicum.imdb_api.data.dto.cast_request.CastInfoResponse
 import com.practicum.imdb_api.data.dto.movies_details_request.MoviesDetailsResponse
 import com.practicum.imdb_api.data.dto.movies_search_request.MoviesSearchResponse
 import retrofit2.Call
@@ -13,5 +14,7 @@ interface IMDbApiService {
     @GET("/en/API/Title/k_zcuw1ytf/{movie_id}")
     fun getMovieDetails(@Path("movie_id") movieId: String): Call<MoviesDetailsResponse>
 
+    @GET("/en/API/FullCast/k_zcuw1ytf/{movie_id}")
+    fun getCastList(@Path("movie_id") movieId: String): Call<CastInfoResponse>
 
 }

@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.practicum.imdb_api.domain.api.MoviesInteractor
-import com.practicum.imdb_api.domain.models.MovieDetails
+import com.practicum.imdb_api.domain.models.details.MovieDetails
 import com.practicum.imdb_api.presentation.movie_details.state.MoviesDetailsState
 
 class MovieDetailsViewModel(

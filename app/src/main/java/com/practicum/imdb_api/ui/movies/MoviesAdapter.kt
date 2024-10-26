@@ -2,7 +2,7 @@ package com.practicum.imdb_api.ui.movies
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.practicum.imdb_api.domain.models.Movie
+import com.practicum.imdb_api.domain.models.movie.Movie
 
 class MoviesAdapter (private val clickListener: OnMovieClickListener) : RecyclerView.Adapter<MovieViewHolder> () {
 

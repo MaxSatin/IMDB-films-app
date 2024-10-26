@@ -3,26 +3,18 @@ package com.practicum.imdb_api.data.network
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
+import android.util.Log
 import com.practicum.imdb_api.data.NetworkClient
 import com.practicum.imdb_api.data.dto.movies_search_request.MoviesSearchRequest
 import com.practicum.imdb_api.data.dto.Response
+import com.practicum.imdb_api.data.dto.cast_request.CastInfoRequest
 import com.practicum.imdb_api.data.dto.movies_details_request.MoviesDetailsRequest
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 
 class RetrofitNetworkClient(
     private val context: Context,
-    private val imdbService: IMDbApiService
+    private val imdbService: IMDbApiService,
 ) : NetworkClient {
 
-//    private val imdbBaseUrl = "https://tv-api.com"
-//
-//    private val retrofit = Retrofit.Builder()
-//        .baseUrl(imdbBaseUrl)
-//        .addConverterFactory(GsonConverterFactory.create())
-//        .build()
-
-//    private val imdbService = retrofit.create(IMDbApiService::class.java)
 
     override fun doRequest(dto: Any): Response {
         if (isConnected() == false) {
@@ -30,9 +22,6 @@ class RetrofitNetworkClient(
         }
         when {
             (dto is MoviesSearchRequest) -> {
-//        if (dto !is MoviesSearchRequest) {
-//            return Response().apply { resultCode = 400 }
-//        }
                 val response = imdbService.searchMovies(dto.expression).execute()
                 val body = response.body()
                 return if (body != null) {
@@ -44,6 +33,19 @@ class RetrofitNetworkClient(
 
             (dto is MoviesDetailsRequest) -> {
                 val response = imdbService.getMovieDetails(dto.movieId).execute()
+                val body = response.body()
+                return if (body != null) {
+                    body.apply { resultCode = response.code() }
+                } else {
+                    Response().apply {
+                        resultCode = response.code()
+                    }
+                }
+            }
+
+            (dto is CastInfoRequest) -> {
+                val response = imdbService.getCastList(dto.movieId).execute()
+                Log.d("castInfo", "${response}")
                 val body = response.body()
                 return if (body != null) {
                     body.apply { resultCode = response.code() }

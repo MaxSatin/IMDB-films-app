@@ -2,7 +2,8 @@ package com.practicum.imdb_api.domain.impl
 
 import com.practicum.imdb_api.domain.api.MoviesInteractor
 import com.practicum.imdb_api.domain.api.MoviesRepository
-import com.practicum.imdb_api.domain.models.Movie
+import com.practicum.imdb_api.domain.models.cast_members.CastInfo
+import com.practicum.imdb_api.domain.models.movie.Movie
 import com.practicum.imdb_api.util.Resource
 import java.util.concurrent.Executors
 
@@ -25,6 +26,15 @@ class MoviesInteractorImpl(private val repository: MoviesRepository) : MoviesInt
             when (val resourse = repository.getMovieDetails(movieId)) {
                 is Resource.Success -> consumer.consume(resourse.data, null)
                 is Resource.Error -> consumer.consume(null, resourse.message)
+            }
+        }
+    }
+
+    override fun getCastInfo(movieId: String, consumer: MoviesInteractor.CastInfoConsumer) {
+        executor.execute {
+            when(val resource = repository.getCastList(movieId)){
+                is Resource.Success -> consumer.consume(resource.data, null)
+                is Resource.Error -> consumer.consume(null, resource.message)
             }
         }
     }

@@ -11,16 +11,14 @@ import android.widget.EditText
 import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
-import androidx.activity.ComponentActivity
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.practicum.imdb_api.R
 import com.practicum.imdb_api.databinding.ActivityMainBinding
-import com.practicum.imdb_api.domain.models.Movie
+import com.practicum.imdb_api.domain.models.movie.Movie
 import com.practicum.imdb_api.presentation.movies.MoviesSearchViewModel
 import com.practicum.imdb_api.presentation.movies.MoviesState
 import com.practicum.imdb_api.ui.poster.PosterActivity

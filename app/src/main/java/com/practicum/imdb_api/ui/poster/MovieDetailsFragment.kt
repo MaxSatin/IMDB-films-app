@@ -1,21 +1,24 @@
 package com.practicum.imdb_api.ui.poster
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.commit
 import com.practicum.imdb_api.R
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import com.practicum.imdb_api.databinding.MovieDetailsFragmentBinding
-import com.practicum.imdb_api.domain.models.MovieDetails
+import com.practicum.imdb_api.domain.models.cast_members.CastInfo
+import com.practicum.imdb_api.presentation.movie_details.state.CastInfoState
 import com.practicum.imdb_api.presentation.movie_details.state.MoviesDetailsState
+import com.practicum.imdb_api.presentation.movie_details.viewmodel.CastInfoViewModel
 import com.practicum.imdb_api.presentation.movie_details.viewmodel.MovieDetailsViewModel
 import org.koin.core.parameter.parametersOf
 
-class MovieDetailsFragment: Fragment() {
+class MovieDetailsFragment : Fragment() {
     companion object {
         private const val MOVIE_ID = "movie_id"
         fun newInstance(movieID: String): MovieDetailsFragment {
@@ -26,9 +29,13 @@ class MovieDetailsFragment: Fragment() {
         }
     }
 
-    private val viewModel: MovieDetailsViewModel by viewModel{
+    private val viewModel: MovieDetailsViewModel by viewModel {
         parametersOf(arguments?.getString(MOVIE_ID))
     }
+
+//    private val viewModelCast: CastInfoViewModel by viewModel {
+//        parametersOf(arguments?.getString(MOVIE_ID))
+//    }
 
     private var _binding: MovieDetailsFragmentBinding? = null
     private val binding get() = _binding!!
@@ -36,7 +43,7 @@ class MovieDetailsFragment: Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View? {
         _binding = MovieDetailsFragmentBinding.inflate(inflater, container, false)
         return binding.root
@@ -44,24 +51,39 @@ class MovieDetailsFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.getMovieDetailsLiveData().observe(viewLifecycleOwner){ movieDetailsState ->
-            if (movieDetailsState is MoviesDetailsState.Content) {
-              val moviesDetails = movieDetailsState.moviesDetails
-                binding.filmTitle.text = moviesDetails.title
-                binding.actualYear.text = moviesDetails.year
-                binding.actualRating.text = moviesDetails.imDbRating
-                binding.actualCountry.text = moviesDetails.countries
-                binding.actualGenre.text = moviesDetails.genres
-                binding.actualDirector.text = moviesDetails.directors
-                binding.actualScreenWriter.text = moviesDetails.writers
-                binding.actualActors.text = moviesDetails.stars
-                binding.actualStory.text = moviesDetails.plot
-//            } else {
-//                activity?.supportFragmentManager.commit {
-//                    replace(R.id.)
-//                }
-            }
+//        viewModelCast.getCastInfo()
+        viewModel.getMovieDetailsLiveData().observe(viewLifecycleOwner) { movieDetailsState ->
+            when (movieDetailsState) {
+                is MoviesDetailsState.Content -> {
+                    binding.movieDetailsInfo.isVisible = true
+                    with(movieDetailsState.moviesDetails) {
+                        binding.filmTitle.text = title
+                        binding.actualYear.text = year
+                        binding.actualRating.text = imDbRating
+                        binding.actualCountry.text = countries
+                        binding.actualGenre.text = genres
+                        binding.actualDirector.text = directors
+                        binding.actualScreenWriter.text = writers
+                        binding.actualActors.text = stars
+                        binding.actualStory.text = plot
+                    }
+                }
 
+                is MoviesDetailsState.Error -> {
+                    binding.movieDetailsInfo.isVisible = false
+                    binding.errorMessage.isVisible = true
+                    binding.errorMessage.text = movieDetailsState.errorMessage
+
+                }
+            }
+        }
+
+        binding.showCastButton.setOnClickListener{
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.posterActivityContainer, CastFragment())
+                .addToBackStack("null")
+                .setReorderingAllowed(true)
+                .commit()
         }
     }
 }

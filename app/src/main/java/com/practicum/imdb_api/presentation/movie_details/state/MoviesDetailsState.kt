@@ -1,6 +1,6 @@
 package com.practicum.imdb_api.presentation.movie_details.state
 
-import com.practicum.imdb_api.domain.models.MovieDetails
+import com.practicum.imdb_api.domain.models.details.MovieDetails
 
 interface MoviesDetailsState {
     object Loading: MoviesDetailsState

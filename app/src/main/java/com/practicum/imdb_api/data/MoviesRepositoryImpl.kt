@@ -1,13 +1,20 @@
 package com.practicum.imdb_api.data
 
+import android.util.Log
+import com.practicum.imdb_api.domain.models.cast_members.CastInfo
+import com.practicum.imdb_api.domain.models.cast_members.CastShort
 import com.practicum.imdb_api.data.Storage.LocalStorage
+import com.practicum.imdb_api.data.dto.cast_request.CastInfoRequest
+import com.practicum.imdb_api.data.dto.cast_request.CastInfoResponse
 import com.practicum.imdb_api.data.dto.movies_details_request.MoviesDetailsRequest
 import com.practicum.imdb_api.data.dto.movies_details_request.MoviesDetailsResponse
 import com.practicum.imdb_api.data.dto.movies_search_request.MoviesSearchRequest
 import com.practicum.imdb_api.data.dto.movies_search_request.MoviesSearchResponse
 import com.practicum.imdb_api.domain.api.MoviesRepository
-import com.practicum.imdb_api.domain.models.Movie
-import com.practicum.imdb_api.domain.models.MovieDetails
+import com.practicum.imdb_api.domain.models.cast_members.ActorShort
+import com.practicum.imdb_api.domain.models.cast_members.CastShortItem
+import com.practicum.imdb_api.domain.models.movie.Movie
+import com.practicum.imdb_api.domain.models.details.MovieDetails
 import com.practicum.imdb_api.util.Resource
 
 class MoviesRepositoryImpl(
@@ -64,6 +71,60 @@ class MoviesRepositoryImpl(
                         stars = response.stars,
                         plot = response.plot
                     )
+                )
+            }
+
+            else -> Resource.Error("Ошибка сервера")
+        }
+    }
+
+    override fun getCastList(movieId: String): Resource<CastInfo> {
+        val response = networkClient.doRequest(CastInfoRequest(movieId))
+
+        return when (response.resultCode) {
+            -1 -> Resource.Error("Проверьте подключение к интернету")
+
+            200 -> {
+                (response as CastInfoResponse)
+                Log.d("response: MovieRepository", "$response")
+                Resource.Success(
+                        CastInfo(
+                            id= response.imDbId,
+                            title = response.title,
+                            fullTitle = response.fullTitle,
+                            type = response.type,
+                            year = response.year,
+                            directors = CastShort(
+                                job = "Director",
+                                items = response.directors.items.map {
+                                    CastShortItem(
+                                        it.id,
+                                        it.name,
+                                        it.description
+                                    )
+                                }
+                            ),
+                            writers = CastShort(
+                                job = "Writer",
+                                items = response.writers.items.map {
+                                    CastShortItem(
+                                        it.id,
+                                        it.name,
+                                        it.description
+                                    )
+                                }
+                            ),
+                            actors = response.actors.map {
+                                ActorShort(
+                                    it.id,
+                                    it.image,
+                                    it.name,
+                                    it.asCharacter
+                                )
+                            }
+                        )
+
+
                 )
             }
 

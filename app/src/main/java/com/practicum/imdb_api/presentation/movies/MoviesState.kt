@@ -1,6 +1,6 @@
 package com.practicum.imdb_api.presentation.movies
 
-import com.practicum.imdb_api.domain.models.Movie
+import com.practicum.imdb_api.domain.models.movie.Movie
 
 sealed interface MoviesState {
 
