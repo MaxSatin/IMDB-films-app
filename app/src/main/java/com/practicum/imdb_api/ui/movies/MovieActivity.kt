@@ -46,9 +46,6 @@ class MovieActivity : AppCompatActivity() {
         }
     }
 )
-
-
-
 //    @InjectPresenter
 //    lateinit var moviesSearchPresenter: MoviesSearchViewModel
 
@@ -115,7 +112,6 @@ class MovieActivity : AppCompatActivity() {
         viewModel.observeToastState().observe(this) { toast ->
             showToast(toast)
         }
-
     }
 
     private fun clickDebounce(): Boolean {

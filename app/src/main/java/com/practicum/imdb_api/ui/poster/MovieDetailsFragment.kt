@@ -1,5 +1,6 @@
 package com.practicum.imdb_api.ui.poster
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -16,11 +17,13 @@ import com.practicum.imdb_api.presentation.movie_details.state.CastInfoState
 import com.practicum.imdb_api.presentation.movie_details.state.MoviesDetailsState
 import com.practicum.imdb_api.presentation.movie_details.viewmodel.CastInfoViewModel
 import com.practicum.imdb_api.presentation.movie_details.viewmodel.MovieDetailsViewModel
+import com.practicum.imdb_api.ui.cast_activity.CastActivity
 import org.koin.core.parameter.parametersOf
 
 class MovieDetailsFragment : Fragment() {
     companion object {
         private const val MOVIE_ID = "movie_id"
+        private const val MOVIE_TITLE = "movie_title"
         fun newInstance(movieID: String): MovieDetailsFragment {
             return MovieDetailsFragment().apply {
                 arguments = bundleOf(MOVIE_ID to movieID)
@@ -32,6 +35,8 @@ class MovieDetailsFragment : Fragment() {
     private val viewModel: MovieDetailsViewModel by viewModel {
         parametersOf(arguments?.getString(MOVIE_ID))
     }
+
+    private var filmTitle: String? = null
 
 //    private val viewModelCast: CastInfoViewModel by viewModel {
 //        parametersOf(arguments?.getString(MOVIE_ID))
@@ -57,6 +62,7 @@ class MovieDetailsFragment : Fragment() {
                 is MoviesDetailsState.Content -> {
                     binding.movieDetailsInfo.isVisible = true
                     with(movieDetailsState.moviesDetails) {
+                        filmTitle = title
                         binding.filmTitle.text = title
                         binding.actualYear.text = year
                         binding.actualRating.text = imDbRating
@@ -78,12 +84,20 @@ class MovieDetailsFragment : Fragment() {
             }
         }
 
-        binding.showCastButton.setOnClickListener{
-            parentFragmentManager.beginTransaction()
-                .replace(R.id.posterActivityContainer, CastFragment())
-                .addToBackStack("null")
-                .setReorderingAllowed(true)
-                .commit()
+        binding.showCastButton.setOnClickListener {
+
+            val intent = Intent(requireContext(), CastActivity::class.java).apply {
+                val id = arguments?.getString(MOVIE_ID)
+                Log.d("movieId", "$id")
+                putExtra(MOVIE_ID, id)
+                putExtra(MOVIE_TITLE, filmTitle)
+            }
+            startActivity(intent)
+//            parentFragmentManager.beginTransaction()
+//                .replace(R.id.posterActivityContainer, CastFragment())
+//                .addToBackStack("null")
+//                .setReorderingAllowed(true)
+//                .commit()
         }
     }
 }

@@ -17,75 +17,21 @@
             android:textColor="@color/black"
             android:textSize="40sp"
             android:textStyle="italic"
-            app:layout_constraintStart_toEndOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Lord of the Rings. The Fellowship of the Ring" />
 
-        <TextView
-            android:id="@+id/directors"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
-            android:text="Directors"
-            android:textColor="@color/black"
-            android:textSize="40sp"
-            android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="@id/filmTitle"
-            app:layout_constraintTop_toBottomOf="@id/filmTitle" />
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/directorsRV"
+            android:id="@+id/castRV"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="@id/filmTitle"
-            app:layout_constraintStart_toStartOf="@id/filmTitle"
-            app:layout_constraintTop_toBottomOf="@id/directors"
-            android:background="#9196B1">
-        </androidx.recyclerview.widget.RecyclerView>
-
-        <TextView
-            android:id="@+id/writers"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
-            android:text="Writers"
-            android:textColor="@color/black"
-            android:textSize="40sp"
-            android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="@id/filmTitle"
-            app:layout_constraintTop_toBottomOf="@id/directorsRV" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/writersRV"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="@id/filmTitle"
-            app:layout_constraintStart_toStartOf="@id/filmTitle"
-            app:layout_constraintTop_toBottomOf="@id/writers"
-            android:background="#9196B1">
-        </androidx.recyclerview.widget.RecyclerView>
-
-        <TextView
-            android:id="@+id/actors"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
-            android:text="Actors"
-            android:textColor="@color/black"
-            android:textSize="40sp"
-            android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="@id/filmTitle"
-            app:layout_constraintTop_toBottomOf="@id/writersRV" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/actorsRV"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="@id/filmTitle"
-            app:layout_constraintStart_toStartOf="@id/filmTitle"
-            app:layout_constraintTop_toBottomOf="@id/actors"
-            android:background="#9196B1">
+            android:layout_marginTop="50dp"
+            app:layout_constraintEnd_toEndOf="@id/movieDetails_info"
+            app:layout_constraintStart_toStartOf="@id/movieDetails_info"
+            app:layout_constraintTop_toBottomOf="@id/filmTitle"
+            android:background="#DDDDDD">
         </androidx.recyclerview.widget.RecyclerView>
 
 

@@ -1,6 +1,5 @@
 package com.practicum.imdb_api.presentation.movie_details.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -19,7 +18,7 @@ class CastInfoViewModel(
     init {
         getCastInfo()
     }
-   fun getCastInfo(){
+   private fun getCastInfo(){
         renderState(
             CastInfoState.Loading
         )
