@@ -3,6 +3,7 @@ package com.practicum.imdb_api
 import android.app.Application
 import com.practicum.imdb_api.data.di.dataModule
 import com.practicum.imdb_api.data.di.interactorModule
+import com.practicum.imdb_api.data.di.navigationModule
 import com.practicum.imdb_api.data.di.viewModelModule
 import com.practicum.imdb_api.presentation.movies.MoviesSearchViewModel
 import org.koin.android.ext.koin.androidContext
@@ -17,7 +18,7 @@ class MoviesApplication : Application() {
 
         startKoin {
             androidContext(this@MoviesApplication)
-            modules(dataModule, interactorModule, viewModelModule)
+            modules(dataModule, interactorModule, viewModelModule, navigationModule)
         }
     }
 }

@@ -9,7 +9,9 @@ import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.commit
 import com.practicum.imdb_api.R
+import com.practicum.imdb_api.core.navigation.Router
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import com.practicum.imdb_api.databinding.MovieDetailsFragmentBinding
 import com.practicum.imdb_api.domain.models.cast_members.CastInfo
@@ -17,7 +19,9 @@ import com.practicum.imdb_api.presentation.movie_details.state.CastInfoState
 import com.practicum.imdb_api.presentation.movie_details.state.MoviesDetailsState
 import com.practicum.imdb_api.presentation.movie_details.viewmodel.CastInfoViewModel
 import com.practicum.imdb_api.presentation.movie_details.viewmodel.MovieDetailsViewModel
-import com.practicum.imdb_api.ui.cast_activity.CastActivity
+
+import com.practicum.imdb_api.ui.cast_activity.CastFragment
+import org.koin.android.ext.android.inject
 import org.koin.core.parameter.parametersOf
 
 class MovieDetailsFragment : Fragment() {
@@ -31,7 +35,7 @@ class MovieDetailsFragment : Fragment() {
             }
         }
     }
-
+    private val router : Router by inject()
     private val viewModel: MovieDetailsViewModel by viewModel {
         parametersOf(arguments?.getString(MOVIE_ID))
     }
@@ -85,19 +89,24 @@ class MovieDetailsFragment : Fragment() {
         }
 
         binding.showCastButton.setOnClickListener {
-
-            val intent = Intent(requireContext(), CastActivity::class.java).apply {
-                val id = arguments?.getString(MOVIE_ID)
-                Log.d("movieId", "$id")
-                putExtra(MOVIE_ID, id)
-                putExtra(MOVIE_TITLE, filmTitle)
+            router.openFragment(
+                CastFragment.newInstance(
+                        arguments?.getString(MOVIE_ID),
+                        filmTitle
+                    )
+            )
+//            parentFragment?.parentFragmentManager?.commit {
+//
+//                replace(
+//                    R.id.fragment_container,
+//                    CastFragment.newInstance(
+//                        arguments?.getString(MOVIE_ID),
+//                        filmTitle
+//                    )
+//                )
+//                addToBackStack("null")
+//                setReorderingAllowed(true)
             }
-            startActivity(intent)
-//            parentFragmentManager.beginTransaction()
-//                .replace(R.id.posterActivityContainer, CastFragment())
-//                .addToBackStack("null")
-//                .setReorderingAllowed(true)
-//                .commit()
+
         }
     }
-}
