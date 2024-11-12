@@ -9,6 +9,7 @@ import com.practicum.imdb_api.data.dto.movies_search_request.MoviesSearchRequest
 import com.practicum.imdb_api.data.dto.Response
 import com.practicum.imdb_api.data.dto.cast_request.CastInfoRequest
 import com.practicum.imdb_api.data.dto.movies_details_request.MoviesDetailsRequest
+import com.practicum.imdb_api.data.dto.persons_search_request.PersonsSearchRequest
 
 class RetrofitNetworkClient(
     private val context: Context,
@@ -53,6 +54,16 @@ class RetrofitNetworkClient(
                     Response().apply {
                         resultCode = response.code()
                     }
+                }
+            }
+            (dto is PersonsSearchRequest) -> {
+                val response = imdbService.searchPersons(dto.expression).execute()
+                Log.d("personsSearch", "${response}")
+                val body = response.body()
+                return if (body != null) {
+                    body.apply { resultCode = response.code() }
+                } else {
+                    Response().apply { resultCode = response.code() }
                 }
             }
             else -> return Response().apply { resultCode = 400 }

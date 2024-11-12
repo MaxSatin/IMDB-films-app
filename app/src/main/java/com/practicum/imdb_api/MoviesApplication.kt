@@ -5,7 +5,6 @@ import com.practicum.imdb_api.data.di.dataModule
 import com.practicum.imdb_api.data.di.interactorModule
 import com.practicum.imdb_api.data.di.navigationModule
 import com.practicum.imdb_api.data.di.viewModelModule
-import com.practicum.imdb_api.presentation.movies.MoviesSearchViewModel
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 

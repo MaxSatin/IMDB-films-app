@@ -10,11 +10,14 @@ import com.practicum.imdb_api.data.dto.movies_details_request.MoviesDetailsReque
 import com.practicum.imdb_api.data.dto.movies_details_request.MoviesDetailsResponse
 import com.practicum.imdb_api.data.dto.movies_search_request.MoviesSearchRequest
 import com.practicum.imdb_api.data.dto.movies_search_request.MoviesSearchResponse
+import com.practicum.imdb_api.data.dto.persons_search_request.PersonsSearchRequest
+import com.practicum.imdb_api.data.dto.persons_search_request.PersonsSearchResponse
 import com.practicum.imdb_api.domain.api.MoviesRepository
 import com.practicum.imdb_api.domain.models.cast_members.ActorShort
 import com.practicum.imdb_api.domain.models.cast_members.CastShortItem
 import com.practicum.imdb_api.domain.models.movie.Movie
 import com.practicum.imdb_api.domain.models.details.MovieDetails
+import com.practicum.imdb_api.domain.models.person.Person
 import com.practicum.imdb_api.util.Resource
 
 class MoviesRepositoryImpl(
@@ -88,46 +91,64 @@ class MoviesRepositoryImpl(
                 (response as CastInfoResponse)
                 Log.d("response: MovieRepository", "$response")
                 Resource.Success(
-                        CastInfo(
-                            id= response.imDbId,
-                            title = response.title,
-                            fullTitle = response.fullTitle,
-                            type = response.type,
-                            year = response.year,
-                            directors = CastShort(
-                                job = "Director",
-                                items = response.directors.items.map {
-                                    CastShortItem(
-                                        it.id,
-                                        it.name,
-                                        it.description
-                                    )
-                                }
-                            ),
-                            writers = CastShort(
-                                job = "Writer",
-                                items = response.writers.items.map {
-                                    CastShortItem(
-                                        it.id,
-                                        it.name,
-                                        it.description
-                                    )
-                                }
-                            ),
-                            actors = response.actors.map {
-                                ActorShort(
+                    CastInfo(
+                        id = response.imDbId,
+                        title = response.title,
+                        fullTitle = response.fullTitle,
+                        type = response.type,
+                        year = response.year,
+                        directors = CastShort(
+                            job = "Director",
+                            items = response.directors.items.map {
+                                CastShortItem(
                                     it.id,
-                                    it.image,
                                     it.name,
-                                    it.asCharacter
+                                    it.description
                                 )
                             }
-                        )
+                        ),
+                        writers = CastShort(
+                            job = "Writer",
+                            items = response.writers.items.map {
+                                CastShortItem(
+                                    it.id,
+                                    it.name,
+                                    it.description
+                                )
+                            }
+                        ),
+                        actors = response.actors.map {
+                            ActorShort(
+                                it.id,
+                                it.image,
+                                it.name,
+                                it.asCharacter
+                            )
+                        }
+                    )
 
 
                 )
             }
+            else -> Resource.Error("Ошибка сервера")
+        }
+    }
 
+    override fun searchPersons(expression: String): Resource<List<Person>> {
+        val response = networkClient.doRequest(PersonsSearchRequest(expression))
+        return when (response.resultCode) {
+            -1 -> Resource.Error("Проверьте подключение к интернету")
+            200 -> {
+                Resource.Success((response as PersonsSearchResponse).results.map {
+                    Person(
+                        it.id,
+                        it.resultType,
+                        it.image,
+                        it.title,
+                        it.description
+                    )
+                })
+            }
             else -> Resource.Error("Ошибка сервера")
         }
     }

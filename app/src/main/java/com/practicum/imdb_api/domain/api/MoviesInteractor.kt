@@ -3,9 +3,11 @@ package com.practicum.imdb_api.domain.api
 import com.practicum.imdb_api.domain.models.cast_members.CastInfo
 import com.practicum.imdb_api.domain.models.movie.Movie
 import com.practicum.imdb_api.domain.models.details.MovieDetails
+import com.practicum.imdb_api.domain.models.person.Person
 
 interface MoviesInteractor {
     fun searchMovies(expression: String, consumer: MoviesConsumer)
+    fun searchPersons(expression: String, consumer: PersonsConsumer)
     fun getMovieDetails(movieId: String, consumer: MovieDetailsConsumer)
     fun getCastInfo(movieId: String, consumer: CastInfoConsumer)
     fun addMovieToFavorites(movie: Movie)
@@ -21,5 +23,9 @@ interface MoviesInteractor {
 
     interface  CastInfoConsumer {
         fun consume(castInfo: CastInfo?, errorMessage: String?)
+    }
+
+    interface PersonsConsumer {
+        fun consume(foundPersons: List<Person>?, errorMessage: String?)
     }
 }

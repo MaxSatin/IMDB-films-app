@@ -1,5 +1,6 @@
 package com.practicum.imdb_api.presentation.movies
 
+import com.practicum.imdb_api.presentation.movies.state.MoviesState
 import moxy.MvpView
 import moxy.viewstate.strategy.AddToEndSingleStrategy
 import moxy.viewstate.strategy.OneExecutionStateStrategy
