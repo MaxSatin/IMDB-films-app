@@ -9,6 +9,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.practicum.imdb_api.R
 import com.practicum.imdb_api.domain.api.MoviesInteractor
 import com.practicum.imdb_api.domain.models.movie.Movie
@@ -16,6 +17,9 @@ import com.practicum.imdb_api.domain.models.person.Person
 import com.practicum.imdb_api.presentation.movies.SingleLineEvent
 import com.practicum.imdb_api.presentation.movies.state.MoviesState
 import com.practicum.imdb_api.presentation.persons.state.PersonsState
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class PersonsViewModel(
     application: Application,
@@ -23,6 +27,7 @@ class PersonsViewModel(
 ) : AndroidViewModel(application) {
 
     private var latestSearchText: String? = null
+    private var job: Job? = null
 
 
     companion object {
@@ -62,15 +67,21 @@ class PersonsViewModel(
         }
 
         this.latestSearchText = changedText
+        job?.cancel()
 
-        handler.removeCallbacksAndMessages(SEARCH_REQUEST_TOKEN)
-        val searchRunnable = Runnable { searchRequest(changedText) }
-        val postTime = SystemClock.uptimeMillis() + SEARCH_DEBOUNCE_DELAY
-        handler.postAtTime(
-            searchRunnable,
-            SEARCH_REQUEST_TOKEN,
-            postTime,
-        )
+        job = viewModelScope.launch {
+            delay(SEARCH_DEBOUNCE_DELAY)
+            searchRequest(changedText)
+        }
+
+//        handler.removeCallbacksAndMessages(SEARCH_REQUEST_TOKEN)
+//        val searchRunnable = Runnable { searchRequest(changedText) }
+//        val postTime = SystemClock.uptimeMillis() + SEARCH_DEBOUNCE_DELAY
+//        handler.postAtTime(
+//            searchRunnable,
+//            SEARCH_REQUEST_TOKEN,
+//            postTime,
+//        )
     }
 
     override fun onCleared() {

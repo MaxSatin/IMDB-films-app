@@ -12,6 +12,8 @@ import android.widget.Toast
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.coroutineScope
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.practicum.imdb_api.R
@@ -22,6 +24,10 @@ import com.practicum.imdb_api.presentation.movies.viewmodel.MoviesSearchViewMode
 import com.practicum.imdb_api.presentation.movies.state.MoviesState
 
 import com.practicum.imdb_api.ui.movie_info_fragment.MovieInfoFragment
+import debounce
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -29,7 +35,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class MovieListFragment : Fragment() {
 
     companion object {
-        private const val CLICK_DEBOUNE_DELAY = 1_000L
+        private const val CLICK_DEBOUNE_DELAY = 300L
         private const val SEARCH_DEBOUNCE_DELAY = 2_000L
     }
 
@@ -37,14 +43,7 @@ class MovieListFragment : Fragment() {
     private val adapter = MoviesAdapter(
         object : MoviesAdapter.OnMovieClickListener {
             override fun onMovieClick(movie: Movie) {
-                if (clickDebounce()) {
-//                    router.openFragment(MovieInfoFragment.newInstance(movie.image, movie.id))
-                    findNavController().navigate(
-                        R.id.action_movieListFragment_to_movieInfoFragment,
-                        MovieInfoFragment.createArgs(movie.image, movie.id)
-                    )
-
-                }
+                onMovieClickDebounce(movie)
             }
 
 //                    val intent = Intent(this@MovieActivity, PosterActivity::class.java)
@@ -58,7 +57,10 @@ class MovieListFragment : Fragment() {
         }
     )
     private val handler = Handler(Looper.getMainLooper())
+    private var job: Job? = null
     private var isClickAllowed = true
+
+    private lateinit var onMovieClickDebounce: (Movie) -> Unit
 
 
 //    private lateinit var queryInput: EditText
@@ -68,7 +70,7 @@ class MovieListFragment : Fragment() {
 
     private var textWatcher: TextWatcher? = null
 
-    val viewModel: MoviesSearchViewModel by viewModel()
+    private val viewModel: MoviesSearchViewModel by viewModel()
     private var _binding: MovieListFragmentBinding? = null
     private val binding get() = _binding!!
 
@@ -89,6 +91,12 @@ class MovieListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        onMovieClickDebounce = debounce<Movie>(CLICK_DEBOUNE_DELAY, viewLifecycleOwner.lifecycle.coroutineScope, false){ movie ->
+            findNavController().navigate(
+                R.id.action_movieListFragment_to_movieInfoFragment,
+                MovieInfoFragment.createArgs(movie.image, movie.id)
+            )
+        }
         binding.recyclerMovie.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         binding.recyclerMovie.adapter = adapter
@@ -119,10 +127,14 @@ class MovieListFragment : Fragment() {
 
     private fun clickDebounce(): Boolean {
         val current = isClickAllowed
-        if (isClickAllowed) {
-            isClickAllowed = false
-            handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNE_DELAY)
+        viewLifecycleOwner.lifecycleScope.launch {
+            delay(CLICK_DEBOUNE_DELAY)
+            isClickAllowed = true
         }
+//        if (isClickAllowed) {
+//            isClickAllowed = false
+//            handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNE_DELAY)
+//        }
         return current
     }
 
@@ -168,4 +180,12 @@ class MovieListFragment : Fragment() {
         Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show()
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
+        textWatcher.let {
+            binding.textSearch.removeTextChangedListener(it)
+        }
+
+    }
 }

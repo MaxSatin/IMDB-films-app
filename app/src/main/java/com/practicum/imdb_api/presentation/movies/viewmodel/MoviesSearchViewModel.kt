@@ -8,19 +8,25 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.practicum.imdb_api.R
 import com.practicum.imdb_api.domain.api.MoviesInteractor
 import com.practicum.imdb_api.domain.models.movie.Movie
 import com.practicum.imdb_api.presentation.movies.state.MoviesState
 import com.practicum.imdb_api.presentation.movies.SingleLineEvent
+import com.practicum.imdb_api.presentation.persons.viewmodel.PersonsViewModel
+import com.practicum.imdb_api.presentation.persons.viewmodel.PersonsViewModel.Companion
+import debounce
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class MoviesSearchViewModel(
     application: Application,
     private val moviesInteractor: MoviesInteractor
 ): AndroidViewModel(application) {
-
-    private var latestSearchText: String? = null
-//    private val moviesInteractor = Creator.provideMoviesInteractor(getApplication<Application>())
 
     companion object {
         private const val SEARCH_DEBOUNCE_DELAY = 2000L
@@ -31,6 +37,18 @@ class MoviesSearchViewModel(
 //            }
 //        }
     }
+    private var latestSearchText: String? = null
+    private var job: Job? = null
+    private val movieSearchDebounce = debounce<String>(
+        delayMillis = SEARCH_DEBOUNCE_DELAY,
+        coroutineScope = viewModelScope,
+        useLastParam = true
+    ) { text ->
+        searchRequest(text)
+    }
+
+
+
 
     private val movies = ArrayList<Movie>()
 
@@ -80,21 +98,27 @@ class MoviesSearchViewModel(
     }
 
     fun searchDebounce(changedText: String) {
-
         if(latestSearchText == changedText){
             return
         }
-
         this.latestSearchText = changedText
 
-        handler.removeCallbacksAndMessages(SEARCH_REQUEST_TOKEN)
-        val searchRunnable = Runnable { searchRequest(changedText) }
-        val postTime = SystemClock.uptimeMillis() + SEARCH_DEBOUNCE_DELAY
-        handler.postAtTime(
-            searchRunnable,
-            SEARCH_REQUEST_TOKEN,
-            postTime,
-        )
+        movieSearchDebounce(changedText)
+//        job?.cancel()
+//        job = viewModelScope.launch {
+//
+////            delay(SEARCH_DEBOUNCE_DELAY)
+////            searchRequest(changedText)
+//        }
+
+//        handler.removeCallbacksAndMessages(SEARCH_REQUEST_TOKEN)
+//        val searchRunnable = Runnable { searchRequest(changedText) }
+//        val postTime = SystemClock.uptimeMillis() + SEARCH_DEBOUNCE_DELAY
+//        handler.postAtTime(
+//            searchRunnable,
+//            SEARCH_REQUEST_TOKEN,
+//            postTime,
+//        )
     }
 
     override fun onCleared() {

@@ -5,7 +5,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.root_activity.RootActivity">
+    tools:context=".ui.root_activity.RootActivity"
+    android:animateLayoutChanges="true">
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/rootContainerView"
