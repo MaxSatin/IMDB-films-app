@@ -19,6 +19,8 @@ import com.practicum.imdb_api.domain.models.movie.Movie
 import com.practicum.imdb_api.domain.models.details.MovieDetails
 import com.practicum.imdb_api.domain.models.person.Person
 import com.practicum.imdb_api.util.Resource
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 
 class MoviesRepositoryImpl(
     private val networkClient: NetworkClient,
@@ -26,117 +28,120 @@ class MoviesRepositoryImpl(
 ) : MoviesRepository {
 
     override fun searchMovies(expression: String): Resource<List<Movie>> {
-        val response = networkClient.doRequest(MoviesSearchRequest(expression))
-        return when (response.resultCode) {
-            -1 -> {
-                Resource.Error("Проверьте подключение к интернету")
-            }
-
-            200 -> {
-                val stored = localStorage.getSavedFavorites()
-                Resource.Success((response as MoviesSearchResponse).results.map {
-                    Movie(
-                        it.id,
-                        it.resultType,
-                        it.image,
-                        it.title,
-                        it.description,
-                        inFavorite = stored.contains(it.id)
-                    )
-                })
-            }
-
-            else -> {
-                Resource.Error("Ошибка сервера")
-            }
-        }
+        TODO()
+//        val response = networkClient.doRequest(MoviesSearchRequest(expression))
+//        return when (response.resultCode) {
+//            -1 -> {
+//                Resource.Error("Проверьте подключение к интернету")
+//            }
+//
+//            200 -> {
+//                val stored = localStorage.getSavedFavorites()
+//                Resource.Success((response as MoviesSearchResponse).results.map {
+//                    Movie(
+//                        it.id,
+//                        it.resultType,
+//                        it.image,
+//                        it.title,
+//                        it.description,
+//                        inFavorite = stored.contains(it.id)
+//                    )
+//                })
+//            }
+//
+//            else -> {
+//                Resource.Error("Ошибка сервера")
+//            }
+//        }
     }
 
     override fun getMovieDetails(movieId: String): Resource<MovieDetails> {
-        val response = networkClient.doRequest(MoviesDetailsRequest(movieId))
-        return when (response.resultCode) {
-            -1 -> {
-                Resource.Error("Проверьте подключение к интернету")
-            }
-
-            200 -> {
-                response as MoviesDetailsResponse
-                Resource.Success(
-                    MovieDetails(
-                        id = response.id,
-                        title = response.title,
-                        imDbRating = response.imDbRating,
-                        year = response.year,
-                        countries = response.countries,
-                        genres = response.genres,
-                        directors = response.directors,
-                        writers = response.writers,
-                        stars = response.stars,
-                        plot = response.plot
-                    )
-                )
-            }
-
-            else -> Resource.Error("Ошибка сервера")
-        }
+        TODO()
+//        val response = networkClient.doRequest(MoviesDetailsRequest(movieId))
+//        return when (response.resultCode) {
+//            -1 -> {
+//                Resource.Error("Проверьте подключение к интернету")
+//            }
+//
+//            200 -> {
+//                response as MoviesDetailsResponse
+//                Resource.Success(
+//                    MovieDetails(
+//                        id = response.id,
+//                        title = response.title,
+//                        imDbRating = response.imDbRating,
+//                        year = response.year,
+//                        countries = response.countries,
+//                        genres = response.genres,
+//                        directors = response.directors,
+//                        writers = response.writers,
+//                        stars = response.stars,
+//                        plot = response.plot
+//                    )
+//                )
+//            }
+//
+//            else -> Resource.Error("Ошибка сервера")
+//        }
     }
 
     override fun getCastList(movieId: String): Resource<CastInfo> {
-        val response = networkClient.doRequest(CastInfoRequest(movieId))
-
-        return when (response.resultCode) {
-            -1 -> Resource.Error("Проверьте подключение к интернету")
-
-            200 -> {
-                (response as CastInfoResponse)
-                Log.d("response: MovieRepository", "$response")
-                Resource.Success(
-                    CastInfo(
-                        id = response.imDbId,
-                        title = response.title,
-                        fullTitle = response.fullTitle,
-                        type = response.type,
-                        year = response.year,
-                        directors = CastShort(
-                            job = "Director",
-                            items = response.directors.items.map {
-                                CastShortItem(
-                                    it.id,
-                                    it.name,
-                                    it.description
-                                )
-                            }
-                        ),
-                        writers = CastShort(
-                            job = "Writer",
-                            items = response.writers.items.map {
-                                CastShortItem(
-                                    it.id,
-                                    it.name,
-                                    it.description
-                                )
-                            }
-                        ),
-                        actors = response.actors.map {
-                            ActorShort(
-                                it.id,
-                                it.image,
-                                it.name,
-                                it.asCharacter
-                            )
-                        }
-                    )
-
-
-                )
-            }
-            else -> Resource.Error("Ошибка сервера")
-        }
+        TODO()
+//        val response = networkClient.doRequest(CastInfoRequest(movieId))
+//
+//        return when (response.resultCode) {
+//            -1 -> Resource.Error("Проверьте подключение к интернету")
+//
+//            200 -> {
+//                (response as CastInfoResponse)
+//                Log.d("response: MovieRepository", "$response")
+//                Resource.Success(
+//                    CastInfo(
+//                        id = response.imDbId,
+//                        title = response.title,
+//                        fullTitle = response.fullTitle,
+//                        type = response.type,
+//                        year = response.year,
+//                        directors = CastShort(
+//                            job = "Director",
+//                            items = response.directors.items.map {
+//                                CastShortItem(
+//                                    it.id,
+//                                    it.name,
+//                                    it.description
+//                                )
+//                            }
+//                        ),
+//                        writers = CastShort(
+//                            job = "Writer",
+//                            items = response.writers.items.map {
+//                                CastShortItem(
+//                                    it.id,
+//                                    it.name,
+//                                    it.description
+//                                )
+//                            }
+//                        ),
+//                        actors = response.actors.map {
+//                            ActorShort(
+//                                it.id,
+//                                it.image,
+//                                it.name,
+//                                it.asCharacter
+//                            )
+//                        }
+//                    )
+//
+//
+//                )
+//            }
+//            else -> Resource.Error("Ошибка сервера")
+//        }
     }
 
-    override fun searchPersons(expression: String): Resource<List<Person>> {
+    override fun searchPersons(expression: String): Flow<Resource<List<Person>>> = flow {
         val response = networkClient.doRequest(PersonsSearchRequest(expression))
-        return when (response.resultCode) {
+        when (response.resultCode) {
             -1 -> Resource.Error("Проверьте подключение к интернету")
             200 -> {
                 Resource.Success((response as PersonsSearchResponse).results.map {
