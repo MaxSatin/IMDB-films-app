@@ -27,17 +27,34 @@ class MoviesRepositoryImpl(
     private val localStorage: LocalStorage,
 ) : MoviesRepository {
 
-    override fun searchMovies(expression: String): Resource<List<Movie>> {
-        TODO()
-//        val response = networkClient.doRequest(MoviesSearchRequest(expression))
-//        return when (response.resultCode) {
-//            -1 -> {
-//                Resource.Error("Проверьте подключение к интернету")
-//            }
-//
-//            200 -> {
-//                val stored = localStorage.getSavedFavorites()
-//                Resource.Success((response as MoviesSearchResponse).results.map {
+    override fun searchMovies(expression: String): Flow<Resource<List<Movie>>> = flow {
+
+        val response = networkClient.doRequest(MoviesSearchRequest(expression))
+        when (response.resultCode) {
+            -1 -> {
+                emit(Resource.Error("Проверьте подключение к интернету"))
+            }
+
+            200 -> {
+                val stored = localStorage.getSavedFavorites()
+                with(response as MoviesSearchResponse) {
+                    val data = results.map {
+                        Movie(
+                            it.id,
+                            it.resultType,
+                            it.image,
+                            it.title,
+                            it.description,
+                            inFavorite = stored.contains(it.id)
+                        )
+                    }
+                    emit(Resource.Success(data))
+                }
+            }
+            else -> {
+                emit(Resource.Error("Ошибка сервера"))
+            }
+//                Resource.Success(().results.map {
 //                    Movie(
 //                        it.id,
 //                        it.resultType,
@@ -47,13 +64,11 @@ class MoviesRepositoryImpl(
 //                        inFavorite = stored.contains(it.id)
 //                    )
 //                })
-//            }
-//
-//            else -> {
-//                Resource.Error("Ошибка сервера")
-//            }
-//        }
-    }
+            }
+
+
+        }
+
 
     override fun getMovieDetails(movieId: String): Resource<MovieDetails> {
         TODO()
@@ -142,19 +157,22 @@ class MoviesRepositoryImpl(
     override fun searchPersons(expression: String): Flow<Resource<List<Person>>> = flow {
         val response = networkClient.doRequest(PersonsSearchRequest(expression))
         when (response.resultCode) {
-            -1 -> Resource.Error("Проверьте подключение к интернету")
+            -1 -> emit(Resource.Error("Проверьте подключение к интернету"))
             200 -> {
-                Resource.Success((response as PersonsSearchResponse).results.map {
-                    Person(
-                        it.id,
-                        it.resultType,
-                        it.image,
-                        it.title,
-                        it.description
-                    )
-                })
+                with(response as PersonsSearchResponse) {
+                    val data = results.map {
+                        Person(
+                            it.id,
+                            it.resultType,
+                            it.image,
+                            it.title,
+                            it.description
+                        )
+                    }
+                    emit(Resource.Success(data))
+                }
             }
-            else -> Resource.Error("Ошибка сервера")
+            else -> emit(Resource.Error("Ошибка сервера"))
         }
     }
 

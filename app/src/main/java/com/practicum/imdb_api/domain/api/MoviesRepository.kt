@@ -8,7 +8,7 @@ import com.practicum.imdb_api.util.Resource
 import kotlinx.coroutines.flow.Flow
 
 interface MoviesRepository {
-    fun searchMovies(expression: String): Resource<List<Movie>>
+    fun searchMovies(expression: String): Flow<Resource<List<Movie>>>
     fun searchPersons(expression: String): Flow<Resource<List<Person>>>
     fun getMovieDetails(movieId: String): Resource<MovieDetails>
     fun getCastList(movieId: String): Resource<CastInfo>

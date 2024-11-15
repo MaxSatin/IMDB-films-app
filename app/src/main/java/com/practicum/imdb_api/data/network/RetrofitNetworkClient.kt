@@ -42,14 +42,14 @@ class RetrofitNetworkClient(
                 }
             }
 
-//            is MoviesSearchRequest -> withContext(Dispatchers.IO) {
-//                try {
-//                    val response = imdbService.searchMovies(dto.expression)
-//                    response.apply { resultCode = 200 }
-//                } catch (e: Throwable) {
-//                    Response().apply { resultCode = 500 }
-//                }
-//            }
+            is MoviesSearchRequest -> withContext(Dispatchers.IO) {
+                try {
+                    val response = imdbService.searchMovies(dto.expression)
+                    response.apply { resultCode = 200 }
+                } catch (e: Throwable) {
+                    Response().apply { resultCode = 500 }
+                }
+            }
 //            is MoviesDetailsRequest -> imdbService.getMovieDetails(dto.movieId).execute()
 //            is CastInfoRequest -> imdbService.getCastList(dto.movieId).execute()
             else -> return Response().apply { resultCode = 400 }

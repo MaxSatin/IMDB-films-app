@@ -25,8 +25,8 @@ import kotlinx.coroutines.launch
 
 class MoviesSearchViewModel(
     application: Application,
-    private val moviesInteractor: MoviesInteractor
-): AndroidViewModel(application) {
+    private val moviesInteractor: MoviesInteractor,
+) : AndroidViewModel(application) {
 
     companion object {
         private const val SEARCH_DEBOUNCE_DELAY = 2000L
@@ -37,6 +37,7 @@ class MoviesSearchViewModel(
 //            }
 //        }
     }
+
     private var latestSearchText: String? = null
     private var job: Job? = null
     private val movieSearchDebounce = debounce<String>(
@@ -46,8 +47,6 @@ class MoviesSearchViewModel(
     ) { text ->
         searchRequest(text)
     }
-
-
 
 
     private val movies = ArrayList<Movie>()
@@ -84,7 +83,7 @@ class MoviesSearchViewModel(
         updateMovieContent(movie.id, movie.copy(inFavorite = !movie.inFavorite))
     }
 
-    private fun updateMovieContent(movieId: String, newMovie: Movie){
+    private fun updateMovieContent(movieId: String, newMovie: Movie) {
         val currentState = stateLiveData.value
 
         if (currentState is MoviesState.Content) {
@@ -98,7 +97,7 @@ class MoviesSearchViewModel(
     }
 
     fun searchDebounce(changedText: String) {
-        if(latestSearchText == changedText){
+        if (latestSearchText == changedText) {
             return
         }
         this.latestSearchText = changedText
@@ -131,46 +130,88 @@ class MoviesSearchViewModel(
             renderState(
                 MoviesState.Loading
             )
-            moviesInteractor.searchMovies(
-                newSearchText,
-                object : MoviesInteractor.MoviesConsumer {
-                    override fun consume(foundMovies: List<Movie>?, errorMessage: String?) {
-                            if (foundMovies != null) {
-                                movies.clear()
-                                movies.addAll(foundMovies)
-                            }
-                            when {
-                                errorMessage != null -> {
-                                    renderState(
-                                        MoviesState.Error(
-                                            getApplication<Application>().getString(R.string.something_went_wrong)
-                                        )
-                                    )
-                                    showToast.postValue(errorMessage!!)
-                                }
-
-                                movies.isEmpty() -> {
-                                    renderState(
-                                        MoviesState.Empty(getApplication<Application>().getString(R.string.nothing_found))
-                                    )
-                                }
-
-                                else -> {
-                                    renderState(
-                                        MoviesState.Content(movies)
-                                    )
-
-                                }
-                            }
+            viewModelScope.launch {
+                moviesInteractor.searchMovies(newSearchText)
+                    .collect { pair ->
+                        processResult(pair.first, pair.second)
                     }
-                })
+            }
         }
     }
+
+    private fun processResult(foundMovies: List<Movie>?, errorMessage: String?) {
+        val movies = mutableListOf<Movie>()
+        if (foundMovies != null) {
+            movies.addAll(foundMovies)
+        }
+        when {
+            errorMessage != null -> {
+                renderState(
+                    MoviesState.Error(
+                        getApplication<Application>().getString(R.string.something_went_wrong)
+                    )
+                )
+                showToast.postValue(errorMessage!!)
+            }
+
+            movies.isEmpty() -> {
+                renderState(
+                    MoviesState.Empty(getApplication<Application>().getString(R.string.nothing_found))
+                )
+            }
+
+            else -> {
+                renderState(
+                    MoviesState.Content(movies)
+                )
+
+            }
+        }
+//
+//                                else -> {
+//                                    renderState(
+//                                        MoviesState.Content(movies)
+//                                    )
+//
+//                                }
+    }
+//                object : MoviesInteractor.MoviesConsumer {
+//                    override fun consume(foundMovies: List<Movie>?, errorMessage: String?) {
+//                            if (foundMovies != null) {
+//                                movies.clear()
+//                                movies.addAll(foundMovies)
+//                            }
+//                            when {
+//                                errorMessage != null -> {
+//                                    renderState(
+//                                        MoviesState.Error(
+//                                            getApplication<Application>().getString(R.string.something_went_wrong)
+//                                        )
+//                                    )
+//                                    showToast.postValue(errorMessage!!)
+//                                }
+//
+//                                movies.isEmpty() -> {
+//                                    renderState(
+//                                        MoviesState.Empty(getApplication<Application>().getString(R.string.nothing_found))
+//                                    )
+//                                }
+//
+//                                else -> {
+//                                    renderState(
+//                                        MoviesState.Content(movies)
+//                                    )
+//
+//                                }
+//                            }
+//                    }
+//                })
+//        }
+
 
     private fun renderState(state: MoviesState) {
         stateLiveData.postValue(state)
     }
-
 
 
 }

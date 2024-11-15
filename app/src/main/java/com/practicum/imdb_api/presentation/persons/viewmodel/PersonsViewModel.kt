@@ -35,7 +35,7 @@ class PersonsViewModel(
         private val SEARCH_REQUEST_TOKEN = Any()
     }
 
-    private val persons = ArrayList<Person>()
+//    private val persons = ArrayList<Person>()
 
     private val stateLiveData = MutableLiveData<PersonsState>()
 //    private val mediatorStateLiveData = MediatorLiveData<MoviesState>().also { liveData ->
@@ -94,41 +94,79 @@ class PersonsViewModel(
             renderState(
                 PersonsState.Loading
             )
-            moviesInteractor.searchPersons(
-                newSearchText,
-                object : MoviesInteractor.PersonsConsumer {
-                    override fun consume(foundPersons: List<Person>?, errorMessage: String?) {
-                        if (foundPersons != null) {
-                            persons.clear()
-                            persons.addAll(foundPersons)
-                        }
-                        when {
-                            errorMessage != null -> {
-                                renderState(
-                                    PersonsState.Error(
-                                        getApplication<Application>().getString(R.string.something_went_wrong)
-                                    )
-                                )
-                                showToast.postValue(errorMessage!!)
-                            }
-
-                            persons.isEmpty() -> {
-                                renderState(
-                                    PersonsState.Empty(getApplication<Application>().getString(R.string.nothing_found))
-                                )
-                            }
-
-                            else -> {
-                                renderState(
-                                    PersonsState.Content(persons)
-                                )
-
-                            }
-                        }
+            viewModelScope.launch {
+                moviesInteractor.searchPersons(newSearchText)
+                    .collect { pair ->
+                        processResult(pair.first, pair.second)
                     }
-                })
+            }
         }
     }
+
+    private fun processResult (foundNames: List<Person>?, errorMessage: String?) {
+
+        val persons = mutableListOf<Person>()
+        if (foundNames != null) {
+            persons.addAll(foundNames)
+        }
+
+        when {
+            errorMessage != null -> {
+                renderState(
+                    PersonsState.Error(
+                        getApplication<Application>().getString(R.string.something_went_wrong)
+                    )
+                )
+                showToast.postValue(errorMessage!!)
+            }
+
+            persons.isEmpty() -> {
+                renderState(
+                    PersonsState.Empty(getApplication<Application>().getString(R.string.nothing_found))
+                )
+            }
+
+            else -> {
+                renderState(
+                    PersonsState.Content(persons)
+                )
+
+            }
+        }
+    }
+
+//                 {
+//                        if (foundPersons != null) {
+//                            persons.clear()
+//                            persons.addAll(foundPersons)
+//                        }
+//                        when {
+//                            errorMessage != null -> {
+//                                renderState(
+//                                    PersonsState.Error(
+//                                        getApplication<Application>().getString(R.string.something_went_wrong)
+//                                    )
+//                                )
+//                                showToast.postValue(errorMessage!!)
+//                            }
+//
+//                            persons.isEmpty() -> {
+//                                renderState(
+//                                    PersonsState.Empty(getApplication<Application>().getString(R.string.nothing_found))
+//                                )
+//                            }
+//
+//                            else -> {
+//                                renderState(
+//                                    PersonsState.Content(persons)
+//                                )
+//
+//                            }
+//                        }
+//                    }
+//                })
+//        }
+//    }
 
     private fun renderState(state: PersonsState) {
         stateLiveData.postValue(state)

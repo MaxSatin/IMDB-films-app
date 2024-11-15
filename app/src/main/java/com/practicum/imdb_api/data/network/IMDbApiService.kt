@@ -10,7 +10,7 @@ import retrofit2.http.Path
 
 interface IMDbApiService {
     @GET("/en/API/SearchMovie/k_zcuw1ytf/{expression}")
-    fun searchMovies(@Path("expression") expression: String): Call<MoviesSearchResponse>
+    suspend fun searchMovies(@Path("expression") expression: String): MoviesSearchResponse
 
     @GET("/en/API/SearchName/k_zcuw1ytf/{expression}")
     suspend fun searchPersons(@Path("expression") expression: String): PersonsSearchResponse

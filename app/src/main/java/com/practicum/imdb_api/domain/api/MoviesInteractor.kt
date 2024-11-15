@@ -4,10 +4,11 @@ import com.practicum.imdb_api.domain.models.cast_members.CastInfo
 import com.practicum.imdb_api.domain.models.movie.Movie
 import com.practicum.imdb_api.domain.models.details.MovieDetails
 import com.practicum.imdb_api.domain.models.person.Person
+import kotlinx.coroutines.flow.Flow
 
 interface MoviesInteractor {
-    fun searchMovies(expression: String, consumer: MoviesConsumer)
-    fun searchPersons(expression: String, consumer: PersonsConsumer)
+    fun searchMovies(expression: String): Flow<Pair<List<Movie>?, String?>>
+    fun searchPersons(expression: String): Flow<Pair<List<Person>?, String?>>
     fun getMovieDetails(movieId: String, consumer: MovieDetailsConsumer)
     fun getCastInfo(movieId: String, consumer: CastInfoConsumer)
     fun addMovieToFavorites(movie: Movie)
