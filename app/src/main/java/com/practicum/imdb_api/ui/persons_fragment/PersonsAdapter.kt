@@ -4,10 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.practicum.imdb_api.databinding.ItemPersonBinding
-import com.practicum.imdb_api.domain.models.movie.Movie
 import com.practicum.imdb_api.domain.models.person.Person
-import com.practicum.imdb_api.ui.movies_fragment.MovieViewHolder
-import com.practicum.imdb_api.ui.movies_fragment.MoviesAdapter.OnMovieClickListener
 
 class PersonsAdapter() : RecyclerView.Adapter<PersonsViewHolder> () {
 

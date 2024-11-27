@@ -10,8 +10,8 @@ import kotlinx.coroutines.flow.Flow
 interface MoviesRepository {
     fun searchMovies(expression: String): Flow<Resource<List<Movie>>>
     fun searchPersons(expression: String): Flow<Resource<List<Person>>>
-    fun getMovieDetails(movieId: String): Resource<MovieDetails>
-    fun getCastList(movieId: String): Resource<CastInfo>
+    fun getMovieDetails(movieId: String): Flow<Resource<MovieDetails>>
+    fun getCastList(movieId: String): Flow<Resource<CastInfo>>
     fun addMovieToFavorites(movie: Movie)
     fun removeMovieFromFavorites(movie: Movie)
 }

@@ -58,6 +58,12 @@ class MovieDetailsFragment : Fragment() {
 //        viewModelCast.getCastInfo()
         viewModel.getMovieDetailsLiveData().observe(viewLifecycleOwner) { movieDetailsState ->
             when (movieDetailsState) {
+                is MoviesDetailsState.Loading -> {
+                    binding.movieDetailsInfo.isVisible = false
+                    binding.errorMessage.isVisible = false
+                    binding.errorMessage.isVisible = false
+                    binding.progressBar.isVisible = true
+                }
                 is MoviesDetailsState.Content -> {
                     binding.movieDetailsInfo.isVisible = true
                     with(movieDetailsState.moviesDetails) {

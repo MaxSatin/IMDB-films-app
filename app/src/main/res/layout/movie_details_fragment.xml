@@ -20,6 +20,12 @@
             android:textAlignment="center"
             android:visibility="gone"/>
 
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:visibility="gone"/>
+
 <androidx.constraintlayout.widget.ConstraintLayout
     android:id="@+id/movieDetails_info"
     android:layout_width="match_parent"

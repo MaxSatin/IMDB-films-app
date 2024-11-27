@@ -9,8 +9,8 @@ import kotlinx.coroutines.flow.Flow
 interface MoviesInteractor {
     fun searchMovies(expression: String): Flow<Pair<List<Movie>?, String?>>
     fun searchPersons(expression: String): Flow<Pair<List<Person>?, String?>>
-    fun getMovieDetails(movieId: String, consumer: MovieDetailsConsumer)
-    fun getCastInfo(movieId: String, consumer: CastInfoConsumer)
+    fun getMovieDetails(movieId: String): Flow<Pair<MovieDetails?, String?>>
+    fun getCastInfo(movieId: String): Flow<Pair<CastInfo?, String?>>
     fun addMovieToFavorites(movie: Movie)
     fun removeMovieFromFavorites(movie: Movie)
 

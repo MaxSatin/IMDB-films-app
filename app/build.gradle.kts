@@ -41,7 +41,7 @@ android {
 }
 
 dependencies {
-
+    val room_version = "2.5.1"
     val moxyVersion = "2.2.2"
     implementation ("io.insert-koin:koin-android:3.3.0")
     implementation("com.google.android.material:material:1.8.0")
@@ -68,4 +68,8 @@ dependencies {
     implementation("androidx.fragment:fragment-ktx:1.5.6")
 
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4")
+
+    implementation("androidx.room:room-runtime:$room_version")
+    kapt("androidx.room:room-compiler:$room_version")
+    implementation("androidx.room:room-ktx:$room_version")
 }

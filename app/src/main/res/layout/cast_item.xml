@@ -5,13 +5,14 @@
     android:layout_height="wrap_content"
     android:layout_marginStart="10dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/castItem">
+    android:id="@+id/castItem"
+    android:padding="16dp"
+    android:background="#eeeeee">
 
     <ImageView
         android:id="@+id/photo"
-        android:layout_width="150dp"
-        android:layout_height="200dp"
-        android:layout_marginTop="12dp"
+        android:layout_width="120dp"
+        android:layout_height="180dp"
         app:layout_constraintStart_toStartOf="@id/castItem"
         app:layout_constraintTop_toTopOf="@id/castItem"
         android:src="@drawable/ic_launcher_background"
@@ -19,32 +20,37 @@
         android:visibility="gone"/>
     <TextView
         android:id="@+id/name"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
         android:textSize="20sp"
         android:textStyle="bold"
         tools:text = "Joe write"
         app:layout_constraintStart_toEndOf="@id/photo"
         app:layout_constraintTop_toTopOf="@id/castItem"
-        app:layout_constraintBottom_toBottomOf="@id/castItem"/>
+        app:layout_goneMarginStart="0dp" />
 
     <TextView
         android:id="@+id/additional"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
         android:textSize="20sp"
         android:textStyle="bold"
         tools:text = "Written by"
         app:layout_constraintStart_toEndOf="@id/photo"
-        app:layout_constraintTop_toBottomOf="@id/name"/>
+        app:layout_constraintTop_toBottomOf="@id/name"
+        app:layout_goneMarginStart="0dp" />
     <TextView
         android:id="@+id/asCharacter"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
         android:textSize="20sp"
         android:textStyle="bold"
-        tools:text = "as Character"
+        tools:text= "as Character"
         app:layout_constraintStart_toEndOf="@id/photo"
-        app:layout_constraintTop_toBottomOf="@id/additional"/>
+        app:layout_constraintTop_toBottomOf="@id/additional"
+        app:layout_goneMarginStart="0dp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -10,6 +10,7 @@ import com.practicum.imdb_api.data.dto.Response
 import com.practicum.imdb_api.data.dto.cast_request.CastInfoRequest
 import com.practicum.imdb_api.data.dto.movies_details_request.MoviesDetailsRequest
 import com.practicum.imdb_api.data.dto.persons_search_request.PersonsSearchRequest
+import com.practicum.imdb_api.data.dto.persons_search_request.PersonsSearchResponse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -31,29 +32,54 @@ class RetrofitNetworkClient(
         ) {
             return Response().apply { resultCode = 400 }
         }
-        return when (dto) {
+        var response = Response().apply { resultCode = 400 }
+        withContext(Dispatchers.IO) {
+            try {
+                when (dto) {
+                    is PersonsSearchRequest -> response = imdbService.searchPersons(dto.expression)
+                        .apply { resultCode = 200 }
 
-            is PersonsSearchRequest -> withContext(Dispatchers.IO) {
-                try {
-                    val response = imdbService.searchPersons(dto.expression)
-                    response.apply { resultCode = 200 }
-                } catch (e: Throwable) {
-                    Response().apply { resultCode = 500 }
-                }
-            }
+                    is MoviesSearchRequest -> response = imdbService.searchMovies(dto.expression)
+                        .apply { resultCode = 200 }
 
-            is MoviesSearchRequest -> withContext(Dispatchers.IO) {
-                try {
-                    val response = imdbService.searchMovies(dto.expression)
-                    response.apply { resultCode = 200 }
-                } catch (e: Throwable) {
-                    Response().apply { resultCode = 500 }
+                    is MoviesDetailsRequest -> response = imdbService.getMovieDetails(dto.movieId)
+                        .apply { resultCode = 200 }
+
+                    is CastInfoRequest -> response = imdbService.getCastList(dto.movieId)
+                        .apply { resultCode = 200 }
+
+                    else -> Response().apply { resultCode = 400 }
                 }
+            } catch (e: Throwable) {
+                Response().apply { resultCode = 500 }
             }
-//            is MoviesDetailsRequest -> imdbService.getMovieDetails(dto.movieId).execute()
-//            is CastInfoRequest -> imdbService.getCastList(dto.movieId).execute()
-            else -> return Response().apply { resultCode = 400 }
         }
+        return response
+    }
+
+//        return when (dto) {
+//
+//            is PersonsSearchRequest -> withContext(Dispatchers.IO) {
+//                try {
+//                    val response = imdbService.searchPersons(dto.expression)
+//                    response.apply { resultCode = 200 }
+//                } catch (e: Throwable) {
+//                    Response().apply { resultCode = 500 }
+//                }
+//            }
+//
+//            is MoviesSearchRequest -> withContext(Dispatchers.IO) {
+//                try {
+//                    val response = imdbService.searchMovies(dto.expression)
+//                    response.apply { resultCode = 200 }
+//                } catch (e: Throwable) {
+//                    Response().apply { resultCode = 500 }
+//                }
+//            }
+////            is MoviesDetailsRequest -> imdbService.getMovieDetails(dto.movieId).execute()
+////            is CastInfoRequest -> imdbService.getCastList(dto.movieId).execute()
+//            else -> return Response().apply { resultCode = 400 }
+//        }
 
 //        val body = response.body()
 //        return if (body != null) {
@@ -61,7 +87,6 @@ class RetrofitNetworkClient(
 //        } else {
 //            Response().apply { resultCode = response.code() }
 //        }
-    }
 
 
 //    (dto is MoviesSearchRequest) ->
