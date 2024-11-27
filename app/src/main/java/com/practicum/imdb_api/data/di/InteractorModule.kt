@@ -12,7 +12,7 @@ import org.koin.dsl.module
 val interactorModule = module {
 
     single <MoviesRepository> {
-        MoviesRepositoryImpl(get(), get())
+        MoviesRepositoryImpl(get(), get(), get(), get())
     }
 
     single <MoviesInteractor> {

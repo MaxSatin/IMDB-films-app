@@ -38,4 +38,9 @@
             android:id="@+id/action_movieInfoFragment_to_castFragment"
             app:destination="@id/castFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/historyFragment"
+        android:name="com.practicum.imdb_api.ui.history_fragment.HistoryFragment"
+        android:label="HistoryFragment"
+        tools:layout="@layout/history_fragment" />
 </navigation>

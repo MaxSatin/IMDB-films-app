@@ -42,8 +42,7 @@ val dataModule = module {
     }
 
     single {
-        Room.databaseBuilder(androidContext(), AppDataBase::class.java, "movie_table" )
-            .build()
+        Room.databaseBuilder(androidContext(), AppDataBase::class.java, "database.db").build()
     }
 
 }

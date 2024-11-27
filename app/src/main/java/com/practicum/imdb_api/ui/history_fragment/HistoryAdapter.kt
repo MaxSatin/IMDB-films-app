@@ -9,6 +9,7 @@ import com.practicum.imdb_api.databinding.ItemMovieHistoryBinding
 class HistoryAdapter : RecyclerView.Adapter<HistoryItemViewHolder>() {
 
     var movieHistoryList = ArrayList<Movie>()
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HistoryItemViewHolder {
         val binding = ItemMovieHistoryBinding
             .inflate(
@@ -19,11 +20,9 @@ class HistoryAdapter : RecyclerView.Adapter<HistoryItemViewHolder>() {
             return HistoryItemViewHolder(binding)
     }
 
-    override fun getItemCount(): Int {
-        TODO("Not yet implemented")
-    }
+    override fun getItemCount(): Int = movieHistoryList.size
 
     override fun onBindViewHolder(holder: HistoryItemViewHolder, position: Int) {
-        TODO("Not yet implemented")
+        holder.bind(movieHistoryList.get(position))
     }
 }

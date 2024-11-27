@@ -12,4 +12,10 @@
         android:id="@+id/appInfoFragment"
         android:icon="@drawable/info_vector"
         android:title="Info"/>
+
+    <item
+        android:id="@+id/historyFragment"
+        android:icon="@android:drawable/ic_menu_recent_history"
+        android:title="History"/>
+
 </menu>

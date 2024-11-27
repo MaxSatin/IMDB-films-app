@@ -1,7 +1,7 @@
 package com.practicum.imdb_api.ui.history_fragment
 
+
 import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.bumptech.glide.Glide
 import com.practicum.imdb_api.databinding.ItemMovieHistoryBinding
 import com.practicum.imdb_api.domain.models.movie.Movie

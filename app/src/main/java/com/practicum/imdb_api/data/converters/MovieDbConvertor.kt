@@ -6,7 +6,7 @@ import com.practicum.imdb_api.domain.models.movie.Movie
 
 class MovieDbConvertor {
 
-    fun map(movie: MovieDto): MovieEntity{
+    fun map(movie: MovieDto): MovieEntity {
         return MovieEntity(movie.id, movie.resultType, movie.image, movie.title, movie.description)
     }
 
