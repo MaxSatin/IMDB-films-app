@@ -1,5 +1,6 @@
 package com.practicum.imdb_api.ui.movies_fragment
 
+import android.content.Context
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -9,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
@@ -16,6 +18,7 @@ import androidx.lifecycle.coroutineScope
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.practicum.imdb_api.R
 import com.practicum.imdb_api.core.navigation.Router
 import com.practicum.imdb_api.databinding.MovieListFragmentBinding
@@ -73,6 +76,29 @@ class MovieListFragment : Fragment() {
     private val viewModel: MoviesSearchViewModel by viewModel()
     private var _binding: MovieListFragmentBinding? = null
     private val binding get() = _binding!!
+
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        val confirmDialog = MaterialAlertDialogBuilder(context)
+            .setTitle("Вы уверены, что хотите выйти?")
+            .setNegativeButton("Нет"){ dialog, which ->
+            }.setPositiveButton("Да"){ dialog, which ->
+                requireActivity().finish()
+            }
+
+        val callBack = object: OnBackPressedCallback(
+            true
+        ){
+            override fun handleOnBackPressed() {
+                confirmDialog.show()
+            }
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(
+            this,
+            callBack
+        )
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -179,6 +205,7 @@ class MovieListFragment : Fragment() {
     private fun showToast(message: String) {
         Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show()
     }
+
 
     override fun onDestroy() {
         super.onDestroy()

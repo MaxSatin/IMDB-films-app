@@ -37,6 +37,7 @@ class RootActivity : AppCompatActivity() {
             }
         }
 
+
 //        viewModel = ViewModelProvider(this, MoviesSearchViewModel.getViewModelFactory())[MoviesSearchViewModel::class.java]
 //        placeholderMessage = findViewById(R.id.placeholderMessage)
 //        queryInput = findViewById(R.id.textSearch)
